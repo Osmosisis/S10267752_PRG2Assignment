@@ -57,7 +57,7 @@ namespace Airport
 			ExpectedTime = et;
 			Status = stat;
 		}
-        public abstract double CalculateFees();
+        public virtual double CalculateFees();
 
 		public virtual string ToString()
 		{
