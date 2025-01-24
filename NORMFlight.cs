@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoardingGateClass
+namespace S10267752_PRGassignment2
 {
-    public class BoardingGate
+    internal class NORMFlight : Flight 
     {
-        public BoardingGate()
-        {
-        }
     }
-
 }

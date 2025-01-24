@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerminalClass
+namespace S10267752_PRGassignment2
 {
-    public class Terminal
+    internal class TerminalClass
     {
-        public Terminal()
-        {
-        }
     }
-
 }

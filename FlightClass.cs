@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightClass
+namespace Airport
 {
     abstract class Flight
     {
@@ -23,6 +23,7 @@ namespace FlightClass
 			get { return origin; }
 			set { origin = value; }
 		}
+		public Airline airline = new Airline();
 
 		private string destination;
 
