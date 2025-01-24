@@ -23,7 +23,7 @@ namespace S10267752_PRGassignment2
             get { return origin; }
             set { origin = value; }
         }
-        public Airline airline = new Airline();
+
 
         private string destination;
 
@@ -58,7 +58,10 @@ namespace S10267752_PRGassignment2
             ExpectedTime = et;
             Status = stat;
         }
-        public virtual double CalculateFees();
+        public virtual double CalculateFees()
+        {
+            return 1.0;
+        }
 
         public virtual string ToString()
         {
