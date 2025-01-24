@@ -65,9 +65,27 @@ namespace FlightClass
 		}
     }
 
-    public class NORMFlights : Flight
+    public class NORMFlight : Flight
     {
-        public NORMFlights()
+        public NORMFlight()
+        {
+        }
+    }
+    public class LWTTFlight : Flight
+    {
+        public LWTTFlight()
+        {
+        }
+    }
+    public class DDJBFlight : Flight
+    {
+        public DDJBFlight()
+        {
+        }
+    }
+    public class CFFTFlight : Flight
+    {
+        public CFFTFlight()
         {
         }
     }
