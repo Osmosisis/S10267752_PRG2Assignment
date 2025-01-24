@@ -24,15 +24,45 @@ namespace S10267752_PRGassignment2
 			set { flight = value; }
 		}
 
+		private bool supportcfft;
+
+		public bool SupportCFFT
+		{
+			get { return supportcfft; }
+			set { supportcfft = value; }
+		}
+		private bool supportddjb;
+
+		public bool SupportDDJB
+		{
+			get { return supportddjb; }
+			set { supportddjb = value; }
+		}
+		private bool supportlwtt;
+
+		public bool SupportLWTT
+		{
+			get { return supportlwtt; }
+			set { supportlwtt = value; }
+		}
+
+
 		public BoardingGate() { }
-		public BoardingGate(string gatename, Flight f)
+		public BoardingGate(string gatename, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
 		{
 			GateName = gatename;
-			Flight = f;
-		}
+            SupportCFFT = supportsCFFT;
+            SupportDDJB = supportsDDJB;
+            SupportLWTT = supportsLWTT;
+            Flight = null;
+        }
         public double CalculateFees()
         {
             return 1.0;
+        }
+        public override string ToString()
+        {
+            return $"Gate Name: {GateName} \tSupports CFFT: {SupportCFFT} \tSupports DDJB:{SupportDDJB} \tSupports LWTT: {SupportLWTT} \tFlight:{Flight}";
         }
     }
 }
