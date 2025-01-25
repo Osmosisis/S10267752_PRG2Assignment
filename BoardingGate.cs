@@ -56,10 +56,20 @@ namespace S10267752_PRGassignment2
             SupportLWTT = supportsLWTT;
             Flight = null;
         }
-        public double CalculateFees()
+        public double CalculateFees(Flight flight)
         {
-            return 1.0;
+            double totalFee = 300; 
+
+            if (flight is DDJBFlight && SupportDDJB)
+                totalFee += 300; 
+            else if (flight is CFFTFlight && SupportCFFT)
+                totalFee += 150; 
+            else if (flight is LWTTFlight && SupportLWTT)
+                totalFee += 500;
+
+            return totalFee;
         }
+
         public override string ToString()
         {
             return $"Gate Name: {GateName} \tSupports CFFT: {SupportCFFT} \tSupports DDJB:{SupportDDJB} \tSupports LWTT: {SupportLWTT} \tFlight:{Flight}";
