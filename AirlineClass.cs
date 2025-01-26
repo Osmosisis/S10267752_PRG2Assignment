@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,17 +25,123 @@ namespace S10267752_PRGassignment2
 			set { code = value; }
 		}
 
-		public Dictionary<string, Flight> flights { get; set; } = new Dictionary<string, Flight>();
-
-		public Airline(string name, string code, Dictionary<string, Flight> f)
+		private Dictionary<string, Flight> flights;
+		public Airline(string aname, string acode)
 		{
-			Name = name;
-			Code = code;
-
+			name = aname;
+			code = acode;
+			flights = new Dictionary<string, Flight>();
 		}
+
+		public bool AddFlight(Flight flight)
+		{	
+			if (flights.ContainsKey(flight.FlightNumber) == false)
+			{
+				flights.Add(flight.FlightNumber, flight);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
+		}
+
+
+
+		public bool RemoveFlight(Flight flight)
+		{	
+			if (flights.ContainsKey(flight.FlightNumber) == true)
+			{
+				flights.Remove(flight.FlightNumber);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
+		}
+
         public double CalculateFees()
         {
-            return 1.0;
+			// For every 3 flights arriving/departing, airlines will receive a discount	$350
+			// For each flight arriving/departing before 11am or after 9pm	$110
+			// For each flight with the Origin of Dubai (DXB), Bangkok (BKK) or Tokyo (NRT)	$25
+			// For each flight not indicating any Special Request Codes	$50
+			// For each airline with more than 5 flights arriving/departing, the airline will receive an additional discount	3% off the Total Bill (before any other Discounts)
+
+			double total = 0;
+			const int threeflight = 350;
+			const int lateflight = 110;
+			const int specificorigin = 25;
+			const int nospecialreq = 50;
+			const double morethanfiveflight = 0.03;
+
+
+
+
+			foreach (KeyValuePair<string, Flight> pair in flights)
+			{
+				Flight f = pair.Value;
+				total += f.CalculateFees();
+			}
+			//discounts
+
+			//check for >5 flights
+			if (flights.Count() > 5)
+			{
+				total -= total*morethanfiveflight;
+			}
+
+
+			//every 3 flights
+			double discount = 0;
+			discount += threeflight*Convert.ToInt64(flights.Count()/3);
+
+			//late flights, special origin, no special req
+
+			TimeSpan elevenAM = new TimeSpan(11, 0, 0);
+			TimeSpan ninePM = new TimeSpan(21, 0, 0);
+			
+			foreach (KeyValuePair<string, Flight> pair in flights)
+			{
+				Flight f = pair.Value;
+
+				//late flight
+				if (f.ExpectedTime.TimeOfDay < elevenAM || f.ExpectedTime.TimeOfDay > ninePM)
+				{
+					discount += lateflight;
+				}
+
+				//specific origin
+				if (f.Origin == "Dubai (DXB)" || f.Origin == "Bangkok (BKK)" || f.Origin == "Tokyo (NRT)")
+				{
+					discount += specificorigin;
+				}
+
+				//no special req
+				if (this is NORMFlight)
+				{
+					discount += nospecialreq;
+				}
+			}
+			total -= discount;
+
+            return total;
         }
+
+
+		public override string ToString()
+		{
+			string ret = $"Name: {name}, Code: {code}\nFlights:\n";
+			foreach (KeyValuePair<string, Flight> pair in flights)
+			{
+				ret += $"Flight Number: {pair.Key}, Flight Details: {pair.Value}\n";
+			}
+			return ret;
+		}
+
+
     }
 }
