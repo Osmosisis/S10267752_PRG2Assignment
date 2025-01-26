@@ -8,12 +8,12 @@ namespace S10267752_PRGassignment2
 {
     abstract class Flight
     {
-        private string flightnum;
+        private string flightNumber;
 
-        public string FlightNum
+        public string FlightNumber
         {
-            get { return flightnum; }
-            set { flightnum = value; }
+            get { return flightNumber; }
+            set { flightNumber = value; }
         }
 
         private string origin;
@@ -33,12 +33,12 @@ namespace S10267752_PRGassignment2
             set { destination = value; }
         }
 
-        private DateTime expectedtime;
+        private DateTime expectedTime;
 
         public DateTime ExpectedTime
         {
-            get { return expectedtime; }
-            set { expectedtime = value; }
+            get { return expectedTime; }
+            set { expectedTime = value; }
         }
 
         private string status;
@@ -52,20 +52,62 @@ namespace S10267752_PRGassignment2
         public Flight() { }
         public Flight(string fnum, string og, string dest, DateTime et, string stat)
         {
-            FlightNum = fnum;
+            FlightNumber = fnum;
             Origin = og;
             Destination = dest;
             ExpectedTime = et;
             Status = stat;
         }
+
+
+// Arriving Flight	$500	Arriving Flights are Flights with Destination as Singapore (SIN)
+// Departing Flight	$800	Departing Flights are Flights with Origin as Singapore (SIN)
+// Boarding Gate Base Fee	$300	Base Fee for All Boarding Gates
+
+
         public virtual double CalculateFees()
         {
-            return 1.0;
+            double cost = 0;
+            int af = 500;
+            int df = 800;
+            int bg = 300;
+            if (origin == "Singapore (SIN)")
+            {
+                cost += df;
+            }
+            else
+            {
+                cost += af;
+            }
+
+//assuming every flight must have a bording gate:
+
+            cost += bg;
+            if (this is LWTTFlight)
+            {
+                LWTTFlight lwtt = (LWTTFlight)this;
+                cost += lwtt.CalculateFees();
+            }
+            if (this is DDJBFlight)
+            {
+                DDJBFlight ddjb = (DDJBFlight)this;
+                cost += ddjb.CalculateFees();
+            }
+            if (this is CFFTFlight)
+            {
+                CFFTFlight cfft = (CFFTFlight)this;
+                cost += cfft.CalculateFees();
+            }
+            return cost;
         }
 
         public virtual string ToString()
         {
-            return $"Flight Number: {FlightNum} \tOrigin: {Origin} \tDestination: {Destination} \tExpected Time: {ExpectedTime} \tStatus: {Status}";
+            return $"Flight Number: {flightNumber} \tOrigin: {origin} \tDestination: {destination} \tExpected Time: {expectedTime} \tStatus: {status}";
         }
+
+
     }
+
+
 }
