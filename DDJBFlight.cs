@@ -5,28 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace S10267752_PRGassignment2
-{
-    internal class DDJBFlight : Flight
+{   
+    public interface IDDJBFlight
     {
-        private double requestfee;
+        public double CalculateFees();
+    }
+    internal class DDJBFlight : Flight, IDDJBFlight
+    {
+        private double requestfee = 300;
 
         public double RequestFee
         {
             get { return requestfee; }
             set { requestfee = value; }
         }
-        public DDJBFlight() { }
-        public DDJBFlight(string fnum, string og, string dest, DateTime et, string stat, double requestfee) : base(fnum, og, dest, et, stat)
-        {
-            RequestFee = requestfee;
-        }
+
         public override double CalculateFees()
         {
-            return base.CalculateFees();
+            return requestfee;
         }
         public override string ToString()
         {
-            return base.ToString();
+            return $"{base.ToString()} \n${requestfee} requested (DDJB)";
         }
     }
 }
