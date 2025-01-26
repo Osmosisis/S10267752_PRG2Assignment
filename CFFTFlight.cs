@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//==========================================================
+// Student Number	: S10267752
+// Student Name	: Osmond Lim
+// Partner Name	: Yoshihiro Chan
+//==========================================================
 
 namespace S10267752_PRGassignment2
 {
