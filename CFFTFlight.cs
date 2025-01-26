@@ -6,27 +6,28 @@ using System.Threading.Tasks;
 
 namespace S10267752_PRGassignment2
 {
-    internal class CFFTFlight : Flight
+    public interface ICFFTFlight
     {
-		private double requestfee;
+        public double CalculateFees();
+    }
+    internal class CFFTFlight : Flight, ICFFTFlight
+    {
+		private double requestfee = 150;
 
 		public double RequestFee
 		{
 			get { return requestfee; }
 			set { requestfee = value; }
 		}
-		public CFFTFlight() { }
-		public CFFTFlight(string fnum, string og, string dest, DateTime et, string stat, double requestfee) : base(fnum, og, dest, et, stat) 
-		{
-			RequestFee = requestfee;
-		}
+        
         public override double CalculateFees()
         {
-            return base.CalculateFees();
+            return requestfee;
         }
+        
         public override string ToString()
         {
-            return base.ToString();
+            return $"{base.ToString()} \n${requestfee} requested (CFFT)";
         }
     }
 }
