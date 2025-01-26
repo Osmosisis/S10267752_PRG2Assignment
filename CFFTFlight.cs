@@ -23,6 +23,7 @@ namespace S10267752_PRGassignment2
         public override double CalculateFees()
         {
             return requestfee;
+            //the subclasses only return the special request fee, the actual total fee is returned by the flight base class.
         }
         
         public override string ToString()
