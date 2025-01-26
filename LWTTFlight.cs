@@ -11,27 +11,28 @@ using System.Threading.Tasks;
 
 namespace S10267752_PRGassignment2
 {
-    internal class LWTTFlight : Flight 
+    public interface ILWTTFlight
     {
-        private double requestfee;
+        public double CalculateFees();
+    }
+    internal class LWTTFlight : Flight, ILWTTFlight
+    {
+        private double requestfee = 500;
 
         public double RequestFee
         {
             get { return requestfee; }
             set { requestfee = value; }
         }
-        public LWTTFlight() { }
-        public LWTTFlight(string fnum, string og, string dest, DateTime et, string stat, double requestfee) : base(fnum, og, dest, et, stat)
-        {
-            RequestFee = requestfee;
-        }
         public override double CalculateFees()
         {
-            return base.CalculateFees();
+            return requestfee;
+            //the subclasses only return the special request fee, the actual total fee is returned by the flight base class.
+
         }
         public override string ToString()
         {
-            return base.ToString();
+            return $"{base.ToString()} \n${requestfee} requested (LWTT)";
         }
     }
 }
