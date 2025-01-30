@@ -51,9 +51,6 @@ void ListBoardingGates()
         Console.WriteLine($"{gate.GateName, -10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT}");
     }
 }
-initAirlines();
-initBoardingGates();
-ListBoardingGates();
 // Basic Feature 5
 
 // Basic Feature 6
@@ -63,3 +60,54 @@ ListBoardingGates();
 // Basic Feature 8
 
 // Basic Feature 9
+
+// Main Running Code
+initAirlines();
+initBoardingGates();
+while (true)
+{
+    Console.Write(@"=============================================
+Welcome to Changi Airport Terminal 5
+=============================================
+1. List All Flights
+2. List Boarding Gates
+3. Assign a Boarding Gate to a Flight
+4. Create Flight
+5. Display Airline Flights
+6. Modify Flight Details
+7. Display Flight Schedule
+0. Exit
+
+Please select your option: ");
+    int userinput = Convert.ToInt32( Console.ReadLine());
+    if (userinput == 0)
+        break;
+    else if (userinput == 1)
+    {
+
+    }
+    else if (userinput == 2)
+    {
+        ListBoardingGates();
+    }
+    else if (userinput == 3)
+    {
+
+    }
+    else if (userinput == 4)
+    {
+
+    }
+    else if (userinput == 5)
+    {
+
+    }
+    else if (userinput == 6)
+    {
+
+    }
+    else if (userinput == 7)
+    {
+
+    }
+}
