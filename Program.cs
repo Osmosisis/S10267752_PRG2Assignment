@@ -64,6 +64,12 @@ void ListBoardingGates()
 // Main Running Code
 initAirlines();
 initBoardingGates();
+Console.WriteLine(@"Loading Airlines...
+8 Airlines Loaded!
+Loading Boarding Gates...
+66 Boarding Gates Loaded!
+Loading Flights...
+30 Flights Loaded!");
 while (true)
 {
     Console.Write(@"=============================================
