@@ -88,6 +88,10 @@ Please select your option: ");
     }
     else if (userinput == 2)
     {
+        Console.Write(@"=============================================
+List of Boarding Gates for Changi Airport Terminal 5
+=============================================
+");
         ListBoardingGates();
     }
     else if (userinput == 3)
