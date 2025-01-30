@@ -54,3 +54,12 @@ void ListBoardingGates()
 initAirlines();
 initBoardingGates();
 ListBoardingGates();
+// Basic Feature 5
+
+// Basic Feature 6
+
+// Basic Feature 7
+
+// Basic Feature 8
+
+// Basic Feature 9
