@@ -7,6 +7,7 @@
 
 Dictionary<string, Airline> newair = new Dictionary<string, Airline>();
 Dictionary<string, BoardingGate> newboard = new Dictionary<string, BoardingGate>();
+// Basic Feature 1
 void initAirlines()
 {
     string[] a = File.ReadAllLines("airlines.csv");
@@ -37,5 +38,19 @@ void initBoardingGates()
         newboard.Add(gateName, gate);
     }
 }
+// Basic Feature 2
+
+// Basic Feature 3
+
+// Basic Feature 4
+void ListBoardingGates()
+{
+    Console.WriteLine("Gate Name \tDDJB \tCFFT \tLWTT");
+    foreach (var gate in newboard.Values)
+    {
+        Console.WriteLine($"{gate.GateName, -10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT}");
+    }
+}
 initAirlines();
 initBoardingGates();
+ListBoardingGates();
