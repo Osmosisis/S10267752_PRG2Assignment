@@ -45,6 +45,10 @@ void initBoardingGates()
 // Basic Feature 4
 void ListBoardingGates()
 {
+    Console.Write(@"=============================================
+List of Boarding Gates for Changi Airport Terminal 5
+=============================================
+");
     Console.WriteLine("Gate Name \tDDJB \tCFFT \tLWTT");
     foreach (var gate in newboard.Values)
     {
@@ -56,7 +60,20 @@ void ListBoardingGates()
 // Basic Feature 6
 
 // Basic Feature 7
+void ListAirlines()
+{
+    Console.WriteLine(@"=============================================
+List of Airlines for Changi Airport Terminal 5
+=============================================
+");
+    foreach (var air in newair.Values)
+    {
+        Console.WriteLine($"{air.Code, -15} {air.Name}");
+    }
+    Console.Write("Enter Airline Code: ");
+    string aircode = Console.ReadLine();
 
+}
 // Basic Feature 8
 
 // Basic Feature 9
@@ -94,10 +111,6 @@ Please select your option: ");
     }
     else if (userinput == 2)
     {
-        Console.Write(@"=============================================
-List of Boarding Gates for Changi Airport Terminal 5
-=============================================
-");
         ListBoardingGates();
     }
     else if (userinput == 3)
@@ -110,7 +123,7 @@ List of Boarding Gates for Changi Airport Terminal 5
     }
     else if (userinput == 5)
     {
-
+        ListAirlines();
     }
     else if (userinput == 6)
     {
