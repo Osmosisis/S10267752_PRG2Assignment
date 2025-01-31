@@ -24,7 +24,8 @@ namespace S10267752_PRGassignment2
             get { return requestfee; }
             set { requestfee = value; }
         }
-
+        public DDJBFlight() { }
+        public DDJBFlight(string fnum, string og, string dest, DateTime et, string stat) : base( fnum,  og,  dest,  et,  stat) { }
         public override double CalculateFees()
         {
             return requestfee;
