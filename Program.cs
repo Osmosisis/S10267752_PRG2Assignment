@@ -169,7 +169,8 @@ void AssignBoardingGate()
 // Basic Feature 7
 void ListAirlines()
 {
-    Console.WriteLine(@"=============================================
+    Console.WriteLine(@"
+=============================================
 List of Airlines for Changi Airport Terminal 5
 =============================================
 ");
@@ -190,7 +191,83 @@ List of Airlines for Changi Airport Terminal 5
     }
 }
 // Basic Feature 8
+void modifyFlightDetails()
+{
+    Console.WriteLine(@"
+=============================================
+List of Airlines for Changi Airport Terminal 5
+=============================================
+");
+    foreach (var air in newair.Keys)
+    {
+        Console.WriteLine($"{newair[air].Code,-15} {newair[air].Name}");
+    }
+    Console.Write("Enter Airline Code: ");
+    string aircode = Console.ReadLine();
+    Console.WriteLine($"=============================================\r\nList of Flights for {newair[aircode].Name}\r\n=============================================\r\n");
+    Console.WriteLine($"{"Flight Number",-15} {"Airline Name",-18} {"Origin",-15} {"Destination",-15} {"Expected Departure/Arrival Time"}");
+    foreach (var f in newflight.Keys)
+    {
+        if (f.Substring(0, 2) == aircode)
+        {
+            Console.Write($"\n{newflight[f].FlightNumber,-15} {newair[aircode].Name,-18} {newflight[f].Origin,-15} {newflight[f].Destination,-15} {newflight[f].ExpectedTime}");
+        }
+    }
+    Console.Write("\nChoose an existing Flight to modify or delete: ");
+    string flight2change = Console.ReadLine();
+    Console.Write(@"
+1. Modify Flight
+2. Delete Flight
+Choose an option: ");
+    int chosen = Convert.ToInt32( Console.ReadLine());
+    if (chosen == 1)
+    {
+        Console.Write(@"
+1. Modify Basic Information
+2. Modify Status
+3. Modify Special Request Code
+4. Modify Boarding Gate
+Choose an option: ");
+        int secondchosen = Convert.ToInt32(Console.ReadLine());
+        if (secondchosen == 1)
+        {
+            Console.Write("Enter new Origin: ");
+            newflight[flight2change].Origin = Console.ReadLine();
+            Console.Write("Enter new Destination: ");
+            newflight[flight2change].Destination = Console.ReadLine();
+            Console.Write("Enter new Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
+            newflight[flight2change].ExpectedTime = Convert.ToDateTime(Console.ReadLine());
+        }
+        else if (secondchosen == 2)
+        {
+            Console.Write("Enter new Status: ");
+            newflight[flight2change].Status = Console.ReadLine();
+        }
+        /*
+        else if (secondchosen == 3)
+        {
+            Console.Write("Enter new Special Request Code: ");
+            newflight[flight2change]. = Console.ReadLine();
+        }
+        else if (secondchosen == 4)
+        {
+            Console.Write("Enter new Boarding Gate: ");
+            newflight[flight2change]. = Console.ReadLine();
+        }
+        */
+    }
+    else if (chosen == 2)
+    {
+        Console.Write("Would you like to delete the flight? (Y/N)");
+        string option = Console.ReadLine().ToLower();
+        if (option == "y")
+        {
+            newflight.Remove(flight2change);
+        }
+    }
+    Console.WriteLine($"Flight Updated!\nFlight Number: {newflight[flight2change].FlightNumber}\nAirline Name: {newair[aircode].Name}\nOrigin: {newflight[flight2change].Origin}\nDestination: {newflight[flight2change].Destination}\nExpected Departure/Arrival Time: {newflight[flight2change].ExpectedTime}\nStatus: {newflight[flight2change].Status}");
 
+}
 // Basic Feature 9
 
 // Main Running Code
@@ -205,6 +282,7 @@ Loading Flights...
 while (true)
 {
     Console.Write(@"
+
 =============================================
 Welcome to Changi Airport Terminal 5
 =============================================
@@ -243,7 +321,7 @@ Please select your option: ");
     }
     else if (userinput == 6)
     {
-
+        modifyFlightDetails();
     }
     else if (userinput == 7)
     {
