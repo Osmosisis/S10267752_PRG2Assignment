@@ -9,16 +9,20 @@ using S10267752_PRGassignment2;
 
 Dictionary<string, Airline> newair = new Dictionary<string, Airline>();
 Dictionary<string, BoardingGate> newboard = new Dictionary<string, BoardingGate>();
+Dictionary<string, Flight> newflight = new Dictionary<string, Flight>();
+
 // Basic Feature 1
 void initAirlines()
 {
     string[] a = File.ReadAllLines("airlines.csv");
-    string[] header = a[0].Split(",");
-    foreach (string s in a.Skip(1))
+    foreach (string s in a)
     {
         string[] t = s.Split(',');
         Airline airinit = new Airline(t[0], t[1]);
-        newair.Add(t[1], airinit);  //changed t[0] to t[1]
+        if (!newair.ContainsKey(t[1]))
+        {
+            newair.Add(t[1], airinit); 
+        }
     }
 }
 void initBoardingGates()
@@ -37,7 +41,10 @@ void initBoardingGates()
         BoardingGate gate = new BoardingGate(gateName, supportsCFFT, supportsDDJB, supportsLWTT);
 
         // Add to the newboard dictionary
-        newboard.Add(gateName, gate);
+        if (!newboard.ContainsKey(gateName))
+        {
+            newboard.Add(gateName, gate);
+        }
     }
 }
 // Basic Feature 2
@@ -68,23 +75,14 @@ void initFlights()
             f = new CFFTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
         }
 
-        string airlinecode = t[0].Substring(0,2);
-
-
-        newair[airlinecode].AddFlight(f);
-    
-    }   
+        newflight.Add(t[0], f); //changed it to this as the keys need to be unique or we cant add all the flights
+    }
 }
-
-
-
 
 
 initAirlines();
 initBoardingGates();
 initFlights();
-AssignBoardingGate();
-
 
 
 // Basic Feature 3
@@ -95,9 +93,6 @@ AssignBoardingGate();
 //     System.Console.WriteLine(a.Value.ToString());
 // }
 
-
-
-/*
 
 // Basic Feature 4
 void ListBoardingGates()
@@ -112,7 +107,7 @@ List of Boarding Gates for Changi Airport Terminal 5
         Console.WriteLine($"{gate.GateName, -10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT}");
     }
 }
-*/
+
 // Basic Feature 5
 void AssignBoardingGate()
 {
@@ -168,7 +163,7 @@ void AssignBoardingGate()
     Console.WriteLine($"Flight {flightno} has been assigned to Boarding Gate {boardinggate}!");
 }
 
-/*
+
 // Basic Feature 6
 
 // Basic Feature 7
@@ -178,14 +173,21 @@ void ListAirlines()
 List of Airlines for Changi Airport Terminal 5
 =============================================
 ");
-    foreach (var air in newair.Values)
+    foreach (var air in newair.Keys)
     {
-        Console.WriteLine($"{air.Code, -15} {air.Name}");
+        Console.WriteLine($"{newair[air].Code, -15} {newair[air].Name}");
     }
     Console.Write("Enter Airline Code: ");
     string aircode = Console.ReadLine();
     Console.WriteLine($"=============================================\r\nList of Flights for {newair[aircode].Name}\r\n=============================================\r\n");
-    Console.WriteLine($"{"Flight Number", -12} {"Airline Name", -15} {"Origin", -12} {"Destination", -12} {"Expected Departure/Arrival Time"}");
+    Console.WriteLine($"{"Flight Number", -15} {"Airline Name", -18} {"Origin", -15} {"Destination", -15} {"Expected Departure/Arrival Time"}");
+    foreach (var f in newflight.Keys)
+    {
+        if (f.Substring(0, 2) == aircode)
+        {
+            Console.Write($"\n{newflight[f].FlightNumber, -15} {newair[aircode].Name,-18} {newflight[f].Origin,-15} {newflight[f].Destination,-15} {newflight[f].ExpectedTime}");
+        }
+    }
 }
 // Basic Feature 8
 
@@ -202,7 +204,8 @@ Loading Flights...
 30 Flights Loaded!");
 while (true)
 {
-    Console.Write(@"=============================================
+    Console.Write(@"
+=============================================
 Welcome to Changi Airport Terminal 5
 =============================================
 1. List All Flights
@@ -228,7 +231,7 @@ Please select your option: ");
     }
     else if (userinput == 3)
     {
-
+        AssignBoardingGate();
     }
     else if (userinput == 4)
     {
@@ -247,4 +250,4 @@ Please select your option: ");
 
     }
 }
-*/
+
