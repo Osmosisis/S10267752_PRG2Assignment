@@ -27,7 +27,7 @@ namespace S10267752_PRGassignment2
 
 
         public LWTTFlight() { }
-        public LWTTFlight(string fnum, string og, string dest, DateTime et, string stat) : base( fnum,  og,  dest,  et,  stat) { }
+        public LWTTFlight(string fnum, string og, string dest, DateTime et) : base( fnum,  og,  dest,  et) { }
         public override double CalculateFees()
         {
             return requestfee;
@@ -36,7 +36,7 @@ namespace S10267752_PRGassignment2
         }
         public override string ToString()
         {
-            return $"{base.ToString()} \n${requestfee} requested (LWTT)";
+            return base.ToString();
         }
     }
 }

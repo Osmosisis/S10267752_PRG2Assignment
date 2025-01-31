@@ -1,4 +1,6 @@
-﻿using S10267752_PRGassignment2;
+﻿using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
+using S10267752_PRGassignment2;
 //==========================================================
 // Student Number	: S10267752
 // Student Name	: Osmond Lim
@@ -51,20 +53,19 @@ void initFlights()
 
         if (t[t.Length-1] == "")
         {
-            f = new NORMFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
+            f = new NORMFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
         }
         else if (t[t.Length-1] == "DDJB")
         {
-            f = new DDJBFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
-            Console.WriteLine(f.ToString());
+            f = new DDJBFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
         }
         else if (t[t.Length-1] == "LWTT")
         {
-            f = new LWTTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
+            f = new LWTTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
         }
         else if (t[t.Length-1] == "CFFT")
         {
-            f = new CFFTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
+            f = new CFFTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
         }
 
         string airlinecode = t[0].Substring(0,2);
@@ -74,20 +75,25 @@ void initFlights()
     
     }   
 }
-// Basic Feature 3
+
 
 
 
 
 initAirlines();
-// Console.WriteLine(newair["SQ"].ToString());
 initBoardingGates();
 initFlights();
+AssignBoardingGate();
 
-foreach(KeyValuePair<string,Airline> a in newair)
-{
-    System.Console.WriteLine(a.Value.ToString());
-}
+
+
+// Basic Feature 3
+
+
+// foreach(KeyValuePair<string,Airline> a in newair)
+// {
+//     System.Console.WriteLine(a.Value.ToString());
+// }
 
 
 
@@ -106,8 +112,63 @@ List of Boarding Gates for Changi Airport Terminal 5
         Console.WriteLine($"{gate.GateName, -10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT}");
     }
 }
+*/
 // Basic Feature 5
+void AssignBoardingGate()
+{
+    Console.WriteLine("Enter Flight Number: ");
+    string flightno = Console.ReadLine();
+    string airlinecode = flightno.Substring(0,2);
 
+    Airline airline = newair[airlinecode];
+    Console.WriteLine(airline.flights[flightno].ToString());
+
+
+
+
+    Console.WriteLine("Enter Boarding Gate Name:");
+    string boardinggate = Console.ReadLine();
+    while (true)
+    {
+        if (newboard[boardinggate].Flight == null)
+        {
+            break;
+        }
+        else
+        {
+            Console.Write("Boarding gate is already assigned to another flight. Please Re-Enter Boarding Gate Name: ");
+        }
+    }
+
+    boardinggate.ToString();
+    Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
+    string option = Console.ReadLine();
+    if (option == "Y")
+    {
+        System.Console.WriteLine(@"1. Delayed
+2. Boarding
+3. On Time");
+        System.Console.WriteLine("Please select the new status of the flight: ");
+        option = Console.ReadLine();
+        if (option == "1")
+        {
+            airline.flights[flightno].Status = "Delayed";
+        }
+        else if (option == "2")
+        {
+            airline.flights[airlinecode].Status = "Boarding";
+        }
+        else if (option == "2")
+        {
+            airline.flights[airlinecode].Status = "On Time";
+        }
+
+
+    }
+    Console.WriteLine($"Flight {flightno} has been assigned to Boarding Gate {boardinggate}!");
+}
+
+/*
 // Basic Feature 6
 
 // Basic Feature 7

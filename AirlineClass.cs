@@ -30,7 +30,7 @@ namespace S10267752_PRGassignment2
 			set { code = value; }
 		}
 
-		private Dictionary<string, Flight> flights;
+		public Dictionary<string, Flight> flights;
 		public Airline(string aname, string acode)
 		{
 			name = aname;
@@ -139,11 +139,12 @@ namespace S10267752_PRGassignment2
 
 		public override string ToString()
 		{
-			string ret = $"Name: {name}, Code: {code}\nFlights:\n";
+			string ret = null;
 			foreach (KeyValuePair<string, Flight> pair in flights)
 			{
-				ret += $"Flight Number: {pair.Key}, Flight Details: {pair.Value}\n";
+				ret += $"Flight Number: {pair.Value.FlightNumber}\nName: {name}\nOrigin: {pair.Value.Origin}\nDestination: {pair.Value.Destination}\nExpected Departure/Arrival: {pair.Value.ExpectedTime}\n\n";
 			}
+			ret += "\n";
 			return ret;
 		}
 

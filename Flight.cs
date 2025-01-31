@@ -50,13 +50,12 @@ namespace S10267752_PRGassignment2
         }
 
         public Flight() { }
-        public Flight(string fnum, string og, string dest, DateTime et, string stat)
+        public Flight(string fnum, string og, string dest, DateTime et)
         {
             FlightNumber = fnum;
             Origin = og;
             Destination = dest;
             ExpectedTime = et;
-            Status = stat;
         }
 
 
@@ -102,8 +101,25 @@ namespace S10267752_PRGassignment2
         }
 
         public virtual string ToString()
-        {
-            return $"Flight Number: {flightNumber} \tOrigin: {origin} \tDestination: {destination} \tExpected Time: {expectedTime} \tStatus: {status}";
+        {   
+            string src = "";
+            if (this is DDJBFlight)
+            {
+                src = "DDJB";
+            }
+            else if (this is LWTTFlight)
+            {
+                src = "LWTT";
+            }
+            else if (this is CFFTFlight)
+            {
+                src = "CFFT";
+            }
+            else
+            {
+                src = "None";
+            }
+            return $"Flight Number: {flightNumber} \nOrigin: {origin} \nDestination: {destination} \nExpected Time: {expectedTime} \nSpecial Request Code: {src}\n";
         }
 
 

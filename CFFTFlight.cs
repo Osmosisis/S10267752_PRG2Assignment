@@ -25,7 +25,7 @@ namespace S10267752_PRGassignment2
 			set { requestfee = value; }
 		}
         public CFFTFlight() { }
-        public CFFTFlight(string fnum, string og, string dest, DateTime et, string stat) : base( fnum,  og,  dest,  et,  stat) { }
+        public CFFTFlight(string fnum, string og, string dest, DateTime et) : base( fnum,  og,  dest,  et) { }
         public override double CalculateFees()
         {
             return requestfee;
@@ -34,7 +34,7 @@ namespace S10267752_PRGassignment2
         
         public override string ToString()
         {
-            return $"{base.ToString()} \n${requestfee} requested (CFFT)";
+            return base.ToString();
         }
     }
 }
