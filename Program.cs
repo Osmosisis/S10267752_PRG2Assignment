@@ -72,7 +72,8 @@ List of Airlines for Changi Airport Terminal 5
     }
     Console.Write("Enter Airline Code: ");
     string aircode = Console.ReadLine();
-
+    Console.WriteLine($"=============================================\r\nList of Flights for {newair[aircode].Name}\r\n=============================================\r\n");
+    Console.WriteLine($"{"Flight Number", -12} {"Airline Name", -15} {"Origin", -12} {"Destination", -12} {"Expected Departure/Arrival Time"}");
 }
 // Basic Feature 8
 
