@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//==========================================================
-// Student Number	: S10267752
-// Student Name	: Osmond Lim
-// Partner Name	: Yoshihiro Chan
-//==========================================================
 
 namespace S10267752_PRGassignment2
 {
@@ -85,7 +80,7 @@ namespace S10267752_PRGassignment2
                 cost += af;
             }
 
-//assuming every flight must have a bording gate:
+            //assuming every flight must have a bording gate:
 
             cost += bg;
             if (this is LWTTFlight)

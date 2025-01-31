@@ -12,11 +12,11 @@ void initAirlines()
 {
     string[] a = File.ReadAllLines("airlines.csv");
     string[] header = a[0].Split(",");
-    foreach (string s in a)
+    foreach (string s in a.Skip(1))
     {
         string[] t = s.Split(',');
         Airline airinit = new Airline(t[0], t[1]);
-        newair.Add(t[0], airinit);
+        newair.Add(t[1], airinit);  //changed t[0] to t[1]
     }
 }
 void initBoardingGates()
@@ -39,8 +39,59 @@ void initBoardingGates()
     }
 }
 // Basic Feature 2
+void initFlights()
+{   
 
+    string[] a = File.ReadAllLines("flights.csv");
+    string[] header = a[0].Split(",");
+    foreach (string s in a.Skip(1))
+    {
+        Flight f = null;
+        string[] t = s.TrimEnd().Split(',');
+
+        if (t[t.Length-1] == "")
+        {
+            f = new NORMFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
+        }
+        else if (t[t.Length-1] == "DDJB")
+        {
+            f = new DDJBFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
+            Console.WriteLine(f.ToString());
+        }
+        else if (t[t.Length-1] == "LWTT")
+        {
+            f = new LWTTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
+        }
+        else if (t[t.Length-1] == "CFFT")
+        {
+            f = new CFFTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]),t[4]);
+        }
+
+        string airlinecode = t[0].Substring(0,2);
+
+
+        newair[airlinecode].AddFlight(f);
+    
+    }   
+}
 // Basic Feature 3
+
+
+
+
+initAirlines();
+// Console.WriteLine(newair["SQ"].ToString());
+initBoardingGates();
+initFlights();
+
+foreach(KeyValuePair<string,Airline> a in newair)
+{
+    System.Console.WriteLine(a.Value.ToString());
+}
+
+
+
+/*
 
 // Basic Feature 4
 void ListBoardingGates()
@@ -135,3 +186,4 @@ Please select your option: ");
 
     }
 }
+*/
