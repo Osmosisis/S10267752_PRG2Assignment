@@ -89,11 +89,14 @@ initFlights();
 
 // Basic Feature 3
 
+void ListAllFlights()
+{
+    foreach(KeyValuePair<string,Airline> a in Term5.airlines)
+    {
+        Console.WriteLine(a.Value.ToString());
+    }
 
-// foreach(KeyValuePair<string,Airline> a in newair)
-// {
-//     System.Console.WriteLine(a.Value.ToString());
-// }
+}
 
 
 // Basic Feature 4
@@ -127,7 +130,7 @@ void AssignBoardingGate()
     string airlinecode = flightno.Substring(0,2);
 
     Airline airline = Term5.airlines[airlinecode];
-    Console.WriteLine(airline.flights[flightno].ToString());
+    Console.WriteLine(airline.Flights[flightno].ToString());
 
 
 
@@ -158,15 +161,15 @@ void AssignBoardingGate()
         option = Console.ReadLine();
         if (option == "1")
         {
-            airline.flights[flightno].Status = "Delayed";
+            airline.Flights[flightno].Status = "Delayed";
         }
         else if (option == "2")
         {
-            airline.flights[airlinecode].Status = "Boarding";
+            airline.Flights[airlinecode].Status = "Boarding";
         }
         else if (option == "2")
         {
-            airline.flights[airlinecode].Status = "On Time";
+            airline.Flights[airlinecode].Status = "On Time";
         }
 
 
@@ -379,7 +382,6 @@ Loading Flights...
 while (true)
 {
     Console.Write(@"
-
 =============================================
 Welcome to Changi Airport Terminal 5
 =============================================
@@ -398,7 +400,7 @@ Please select your option: ");
         break;
     else if (userinput == 1)
     {
-
+        ListAllFlights();
     }
     else if (userinput == 2)
     {

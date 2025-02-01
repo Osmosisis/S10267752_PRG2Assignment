@@ -30,7 +30,13 @@ namespace S10267752_PRGassignment2
 			set { code = value; }
 		}
 
-		public Dictionary<string, Flight> flights;
+		private Dictionary<string, Flight> flights;
+		
+		public Dictionary<string, Flight> Flights
+		{
+			get {return flights;}
+			set {flights = value;}
+		}
 		public Airline(string aname, string acode)
 		{
 			name = aname;
