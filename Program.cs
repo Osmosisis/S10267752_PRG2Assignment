@@ -103,10 +103,18 @@ void ListBoardingGates()
 List of Boarding Gates for Changi Airport Terminal 5
 =============================================
 ");
-    Console.WriteLine("Gate Name \tDDJB \tCFFT \tLWTT");
+    Console.WriteLine("Gate Name \tDDJB \tCFFT \tLWTT \tFlight Assigned");
     foreach (var gate in Term5.boardingGates.Values)
     {
-        Console.WriteLine($"{gate.GateName, -10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT}");
+        if (gate.Flight != null)
+        {
+            Console.WriteLine($"{gate.GateName,-10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT} \t{gate.Flight.FlightNumber}");
+
+        }
+        else
+        {
+            Console.WriteLine($"{gate.GateName,-10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT} \t{"None"}");
+        }
     }
 }
 
@@ -115,6 +123,7 @@ void AssignBoardingGate()
 {
     Console.WriteLine("Enter Flight Number: ");
     string flightno = Console.ReadLine();
+    Flight chosenflight = Term5.flights[flightno];
     string airlinecode = flightno.Substring(0,2);
 
     Airline airline = Term5.airlines[airlinecode];
@@ -163,6 +172,7 @@ void AssignBoardingGate()
 
     }
     Console.WriteLine($"Flight {flightno} has been assigned to Boarding Gate {boardinggate}!");
+    Term5.boardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
 }
 
 
