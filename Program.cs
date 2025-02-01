@@ -179,14 +179,6 @@ void AssignBoardingGate()
 
 
 // Basic Feature 6
-/*
-
-
-
-
-N
-*/
-
 void CreateNewFlight()
 {
     bool cont = true;
