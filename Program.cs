@@ -215,6 +215,7 @@ List of Airlines for Changi Airport Terminal 5
     }
     Console.Write("\nChoose an existing Flight to modify or delete: ");
     string flight2change = Console.ReadLine();
+    Flight chosenflight = newflight[flight2change];
     Console.Write(@"
 1. Modify Flight
 2. Delete Flight
@@ -240,21 +241,49 @@ Choose an option: ");
         }
         else if (secondchosen == 2)
         {
-            Console.Write("Enter new Status: ");
+            Console.Write("Enter new Status [On Time/Delayed/Boarding]: ");
             newflight[flight2change].Status = Console.ReadLine();
         }
-        /*
         else if (secondchosen == 3)
         {
             Console.Write("Enter new Special Request Code: ");
-            newflight[flight2change]. = Console.ReadLine();
+            string newrequestcode = Console.ReadLine();
+            if (newrequestcode == "DDJB" && chosenflight is not DDJBFlight) 
+            {
+                chosenflight = new DDJBFlight(chosenflight.FlightNumber, chosenflight.Origin, chosenflight.Destination, chosenflight.ExpectedTime);
+                Console.WriteLine("Flight updated to DDJBFlight.");
+            }
+            else if (newrequestcode == "CFFT" && chosenflight is not CFFTFlight)
+            {
+                chosenflight = new CFFTFlight(chosenflight.FlightNumber, chosenflight.Origin, chosenflight.Destination, chosenflight.ExpectedTime);
+                Console.WriteLine("Flight updated to CFFTFlight.");
+            }
+            else if (newrequestcode == "CFFT" && chosenflight is not LWTTFlight)
+            {
+                chosenflight = new LWTTFlight(chosenflight.FlightNumber, chosenflight.Origin, chosenflight.Destination, chosenflight.ExpectedTime);
+                Console.WriteLine("Flight updated to LWTTFlight.");
+            }
+            else if (newrequestcode == "NORM" && chosenflight is not NORMFlight)
+            {
+                chosenflight = new NORMFlight(chosenflight.FlightNumber, chosenflight.Origin, chosenflight.Destination, chosenflight.ExpectedTime);
+                Console.WriteLine("Flight updated to DDJBFlight.");
+            }
         }
         else if (secondchosen == 4)
         {
             Console.Write("Enter new Boarding Gate: ");
-            newflight[flight2change]. = Console.ReadLine();
+            string boardgatename = Console.ReadLine();
+            if (newboard.ContainsKey(boardgatename))
+            {
+                BoardingGate chosenboard = newboard[boardgatename];
+                chosenboard.Flight = chosenflight;
+            }
         }
-        */
+        Console.WriteLine($"Flight Updated!\nFlight Number: {newflight[flight2change].FlightNumber}\nAirline Name: {newair[aircode].Name}\nOrigin: {newflight[flight2change].Origin}\nDestination: {newflight[flight2change].Destination}\nExpected Departure/Arrival Time: {newflight[flight2change].ExpectedTime}");
+        if (newflight[flight2change].Status != null)
+        {
+            Console.WriteLine($"\nStatus: {newflight[flight2change].Status}"); // if flight obj has status, display
+        }
     }
     else if (chosen == 2)
     {
@@ -265,8 +294,6 @@ Choose an option: ");
             newflight.Remove(flight2change);
         }
     }
-    Console.WriteLine($"Flight Updated!\nFlight Number: {newflight[flight2change].FlightNumber}\nAirline Name: {newair[aircode].Name}\nOrigin: {newflight[flight2change].Origin}\nDestination: {newflight[flight2change].Destination}\nExpected Departure/Arrival Time: {newflight[flight2change].ExpectedTime}\nStatus: {newflight[flight2change].Status}");
-
 }
 // Basic Feature 9
 
