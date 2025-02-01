@@ -53,7 +53,7 @@ namespace S10267752_PRGassignment2
 
 
 		public BoardingGate() { }
-		public BoardingGate(string gatename, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
+		public BoardingGate(string gatename, bool supportsDDJB, bool supportsCFFT, bool supportsLWTT)
 		{
 			GateName = gatename;
             SupportCFFT = supportsCFFT;

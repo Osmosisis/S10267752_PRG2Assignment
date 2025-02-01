@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Serialization;
@@ -9,12 +10,12 @@ using S10267752_PRGassignment2;
 // Partner Name	: Yoshihiro Chan
 //==========================================================
 
-
 Terminal term5 = new Terminal();
 
 // Basic Feature 1
-void initAirlines()
+int initAirlines()
 {
+    int total = 0;
     string[] a = File.ReadAllLines("airlines.csv");
     foreach (string s in a)
     {
@@ -23,35 +24,41 @@ void initAirlines()
         if (!term5.Airlines.ContainsKey(t[1]))
         {
             term5.Airlines.Add(t[1], airinit); 
+            total++;
         }
     }
+
+    return total;
 }
-void initBoardingGates()
+int initBoardingGates()
 {
+    int total = 0;
     string[] a = File.ReadAllLines("boardinggates.csv");
     foreach (string line in a.Skip(1)) 
     {
         string[] parts = line.Split(',');
         // Parse and validate the data
         string gateName = parts[0];
-        bool supportsCFFT = bool.TryParse(parts[1], out bool cfft) && cfft;
-        bool supportsDDJB = bool.TryParse(parts[2], out bool ddjb) && ddjb;
+        bool supportsDDJB = bool.TryParse(parts[1], out bool ddjb) && ddjb;
+        bool supportsCFFT = bool.TryParse(parts[2], out bool cfft) && cfft;
         bool supportsLWTT = bool.TryParse(parts[3], out bool lwtt) && lwtt;
 
         // Create the BoardingGate object
-        BoardingGate gate = new BoardingGate(gateName, supportsCFFT, supportsDDJB, supportsLWTT);
+        BoardingGate gate = new BoardingGate(gateName, supportsDDJB, supportsCFFT, supportsLWTT);
 
         // Add to the newboard dictionary
         if (!term5.BoardingGates.ContainsKey(gateName))
         {
             term5.BoardingGates.Add(gateName, gate);
+            total++;
         }
     }
+    return total;
 }
 // Basic Feature 2
-void initFlights()
+int initFlights()
 {   
-
+    int total = 0;
     string[] a = File.ReadAllLines("flights.csv");
     string[] header = a[0].Split(",");
     foreach (string s in a.Skip(1))
@@ -80,13 +87,12 @@ void initFlights()
 
         string airlinecode = t[0].Substring(0,2);
         term5.Airlines[airlinecode].AddFlight(f);
+        total++;
     }
+    return total;
 }
 
 
-initAirlines();
-initBoardingGates();
-initFlights();
 
 
 // Basic Feature 3
@@ -154,18 +160,47 @@ void AssignBoardingGate()
 
     Console.WriteLine("Enter Boarding Gate Name:");
     String? boardinggate;
-    boardinggate = Console.ReadLine();
+
+
     while (true)
     {
-        if (term5.BoardingGates[boardinggate].Flight == null)
+        bool cont = true;
+        boardinggate = Console.ReadLine();
+        if (chosenflight is LWTTFlight)
         {
-            term5.BoardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
-            break;
+            if (term5.BoardingGates[boardinggate].SupportLWTT == false)
+            {
+                System.Console.WriteLine("Gate does not support LWTT. Please Re-Enter Boarding Gate Name: ");
+                cont = false;
+            }
         }
-        else
+        else if (chosenflight is DDJBFlight)
         {
-            Console.Write("Boarding gate is already assigned to another flight. Please Re-Enter Boarding Gate Name: ");
-            boardinggate = Console.ReadLine();
+            if (term5.BoardingGates[boardinggate].SupportDDJB == false)
+            {
+                System.Console.WriteLine("Gate does not support DDJB. Please Re-Enter Boarding Gate Name: ");
+                cont = false;
+            }
+        }
+        else if (chosenflight is CFFTFlight)
+        {
+            if (term5.BoardingGates[boardinggate].SupportCFFT == false)
+            {
+                System.Console.WriteLine("Gate does not support CFFT. Please Re-Enter Boarding Gate Name: ");
+                cont = false;
+            }
+        }
+        if (cont == true)
+        {
+            if (term5.BoardingGates[boardinggate].Flight == null )
+            {
+                term5.BoardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
+                break;
+            }
+            else
+            {
+                Console.Write("Boarding gate is already assigned to another flight. Please Re-Enter Boarding Gate Name: ");
+            }
         }
     }
 
@@ -185,11 +220,11 @@ void AssignBoardingGate()
         }
         else if (option == "2")
         {
-            airline.Flights[airlinecode].Status = "Boarding";
+            airline.Flights[flightno].Status = "Boarding";
         }
         else if (option == "3")
         {
-            airline.Flights[airlinecode].Status = "On Time";
+            airline.Flights[flightno].Status = "On Time";
         }
 
 
@@ -233,11 +268,33 @@ void CreateNewFlight()
         else
         {
             f = new NORMFlight(flightno,destination,origin,expectedtime);
+            src = "";
         }
 
         
         string airlinecode = flightno.Substring(0,2);
         term5.Airlines[airlinecode].AddFlight(f);
+        // using (StreamWriter sw = new StreamWriter("flights.csv", true)) 
+        // {
+        //     //sw.WriteLine($"{f.FlightNumber},{f.Origin},{f.Destination},{f.ExpectedTime},{src}"); // Add new line to CSV
+        //     sw.WriteLine("hello");
+        //     sw.Flush();
+        // }
+        try
+        {
+            File.AppendAllText("flights.csv",$"{f.FlightNumber},{f.Origin},{f.Destination},{f.ExpectedTime},{src}\n");
+        }
+        catch(Exception ex)
+        {
+            System.Console.WriteLine(ex);
+        }
+        string[] a = File.ReadAllLines("flights.csv");
+        string[] header = a[0].Split(",");
+        foreach (string s in a.Skip(1))
+        {
+            System.Console.WriteLine(s);
+        }
+        
         System.Console.WriteLine($"Flight {flightno} has been added!");
         System.Console.WriteLine("Would you like to add another flight? (Y/N)");
         string option = Console.ReadLine();
@@ -579,14 +636,23 @@ void DisplayFlightSchedule()
 
 
 // Main Running Code
-initAirlines();
-initBoardingGates();
-Console.WriteLine(@"Loading Airlines...
-8 Airlines Loaded!
-Loading Boarding Gates...
-66 Boarding Gates Loaded!
-Loading Flights...
-30 Flights Loaded!");
+
+int temp;
+System.Console.WriteLine("Loading Airlines...");
+temp = initAirlines();
+System.Console.WriteLine($"{temp} Airlines Loaded!");
+System.Console.WriteLine("Loading Boarding Gates...");
+temp = initBoardingGates();
+System.Console.WriteLine($"{temp} Boarding Gates Loaded!");
+System.Console.WriteLine("Loading Flights...");
+temp = initFlights();
+System.Console.WriteLine($"{temp} Flights Loaded!");
+
+
+
+
+
+
 while (true)
 {
     Console.Write(@"
@@ -620,7 +686,7 @@ Please select your option: ");
     }
     else if (userinput == 4)
     {
-
+        CreateNewFlight();
     }
     else if (userinput == 5)
     {
