@@ -165,6 +165,65 @@ void AssignBoardingGate()
 
 
 // Basic Feature 6
+/*
+
+
+
+
+N
+*/
+
+void CreateNewFlight()
+{
+    bool cont = true;
+    while (cont == true)
+    {
+
+    
+        Console.WriteLine("Enter Flight Number: ");
+        string flightno = Console.ReadLine();
+        Console.WriteLine("Enter Destination: ");
+        string destination = Console.ReadLine();
+        Console.WriteLine("Enter Origin:");
+        string origin = Console.ReadLine();
+        Console.WriteLine("Enter Expected Departure/Arrival Time (dd/mm/yyyy hh:mm):");
+        DateTime expectedtime = Convert.ToDateTime(Console.ReadLine());
+        Console.WriteLine("Enter Special Request Code (CFFT/DDJB/LWTT/None):");
+        string src = Console.ReadLine();
+        Flight f = null;
+
+        if (src == "DDJB")
+        {
+            f = new DDJBFlight(flightno,destination,origin,expectedtime);
+        }
+        else if (src == "LWTT")
+        {
+            f = new LWTTFlight(flightno,destination,origin,expectedtime);
+        }
+        else if (src == "CFFT")
+        {
+            f = new CFFTFlight(flightno,destination,origin,expectedtime);
+        }
+        else
+        {
+            f = new NORMFlight(flightno,destination,origin,expectedtime);
+        }
+
+        
+        string airlinecode = flightno.Substring(0,2);
+        newair[airlinecode].AddFlight(f);
+        System.Console.WriteLine($"Flight {flightno} has been added!");
+        System.Console.WriteLine("Would you like to add another flight? (Y/N)");
+        string option = Console.ReadLine();
+        if (option == "N")
+        {
+            cont = false;
+        }
+
+    }
+}
+
+
 
 // Basic Feature 7
 void ListAirlines()
