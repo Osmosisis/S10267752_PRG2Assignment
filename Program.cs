@@ -76,6 +76,9 @@ void initFlights()
         }
 
         newflight.Add(t[0], f); //changed it to this as the keys need to be unique or we cant add all the flights
+
+        string airlinecode = t[0].Substring(0,2);
+        newair[airlinecode].AddFlight(f);
     }
 }
 
