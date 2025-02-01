@@ -133,16 +133,19 @@ void AssignBoardingGate()
 
 
     Console.WriteLine("Enter Boarding Gate Name:");
-    string boardinggate = Console.ReadLine();
+    String? boardinggate;
+    boardinggate = Console.ReadLine();
     while (true)
     {
         if (Term5.boardingGates[boardinggate].Flight == null)
         {
+            Term5.boardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
             break;
         }
         else
         {
             Console.Write("Boarding gate is already assigned to another flight. Please Re-Enter Boarding Gate Name: ");
+            boardinggate = Console.ReadLine();
         }
     }
 
