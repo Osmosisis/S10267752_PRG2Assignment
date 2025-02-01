@@ -123,7 +123,7 @@ void AssignBoardingGate()
 {
     Console.WriteLine("Enter Flight Number: ");
     string flightno = Console.ReadLine();
-    Flight chosenflight = Term5.flights[flightno];
+    Flight chosenflight = Term5.flights[flightno]; // made it a Flight obj
     string airlinecode = flightno.Substring(0,2);
 
     Airline airline = Term5.airlines[airlinecode];
@@ -349,11 +349,25 @@ Choose an option: ");
                 BoardingGate chosenboard = Term5.boardingGates[boardgatename];
                 chosenboard.Flight = chosenflight;
             }
+            foreach (var gate in Term5.boardingGates.Values)
+            {
+                if (gate.GateName != boardgatename && gate.Flight == chosenflight)
+                {
+                    gate.Flight = null;
+                }
+            }
         }
         Console.WriteLine($"Flight Updated!\nFlight Number: {Term5.flights[flight2change].FlightNumber}\nAirline Name: {Term5.airlines[aircode].Name}\nOrigin: {Term5.flights[flight2change].Origin}\nDestination: {Term5.flights[flight2change].Destination}\nExpected Departure/Arrival Time: {Term5.flights[flight2change].ExpectedTime}");
         if (Term5.flights[flight2change].Status != null)
         {
             Console.WriteLine($"\nStatus: {Term5.flights[flight2change].Status}"); // if flight obj has status, display
+        }
+        foreach (var gate in Term5.boardingGates.Values)
+        {
+            if (gate.Flight == chosenflight)
+            {
+                Console.WriteLine($"\nBoarding Gate: {gate.GateName}");
+            }
         }
     }
     else if (chosen == 2)
