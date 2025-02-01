@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
+using System.Runtime.Serialization;
 using S10267752_PRGassignment2;
 //==========================================================
 // Student Number	: S10267752
@@ -91,11 +92,25 @@ initFlights();
 
 void ListAllFlights()
 {
+    // List<Flight> flightlist = new List<Flight>();
+    // foreach(KeyValuePair<string,Airline> a in term5.Airlines)
+    // {
+    //     foreach(KeyValuePair<string,Flight> f in a.Value.Flights)
+    //     {
+    //         flightlist.Add(f.Value);
+    //     }
+        
+    // }     
+    // flightlist.Sort();
+    // foreach(Flight f in flightlist)
+    // {
+    //         Console.WriteLine(f.ToString());
+    // }
+
     foreach(KeyValuePair<string,Airline> a in term5.Airlines)
     {
-        Console.WriteLine(a.Value.ToString());
+        System.Console.WriteLine(a.Value.ToString());
     }
-
 }
 
 
@@ -380,6 +395,63 @@ Choose an option: ");
 }
 // Basic Feature 9
 
+
+void DisplayFlightSchedule()
+{
+    List<Flight> flightlist = new List<Flight>();
+    foreach(KeyValuePair<string,Airline> a in term5.Airlines)
+    {
+        foreach(KeyValuePair<string,Flight> f in a.Value.Flights)
+        {
+            flightlist.Add(f.Value);
+        }
+        
+    }     
+    flightlist.Sort();
+    foreach(Flight f in flightlist)
+    {
+        string src = null;
+        string gate = "Unassigned";
+        string airlinecode = f.FlightNumber.Substring(0,2);
+        if (f is DDJBFlight)
+        {
+            src = "DDJB";
+        }
+        else if (f is LWTTFlight)
+        {
+            src = "LWTT";
+        }
+        else if (f is CFFTFlight)
+        {
+            src = "CFFT";
+        }
+        else
+        {
+            src = "None";
+        }
+
+        foreach(KeyValuePair<string,BoardingGate> g in term5.BoardingGates)
+        {
+            if(g.Value.Flight != null)
+            {
+                if(g.Value.Flight.FlightNumber == f.FlightNumber)
+                {
+                    gate = g.Value.GateName;
+                }
+            }
+
+        }
+        //, Status, Special Request Code (if any) and Boarding Gate 
+            Console.WriteLine($"Flight Number: {f.FlightNumber} \nAirline Name: {term5.Airlines[airlinecode].Name} \nOrigin: {f.Origin} \nDestination: {f.Destination} \nExpected Time: {f.ExpectedTime} \nStatus: {f.Status} \nSpecial Request Code: {src} \nBoarding Gate: {gate} \n");
+
+    }
+}
+
+
+
+
+
+
 // Main Running Code
 initAirlines();
 initBoardingGates();
@@ -434,7 +506,7 @@ Please select your option: ");
     }
     else if (userinput == 7)
     {
-
+        DisplayFlightSchedule();
     }
 }
 

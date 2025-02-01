@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace S10267752_PRGassignment2
 {
-    abstract class Flight
+    abstract class Flight : IComparable<Flight>
     {
         private string flightNumber;
 
@@ -56,6 +57,13 @@ namespace S10267752_PRGassignment2
             Origin = og;
             Destination = dest;
             ExpectedTime = et;
+            Status = "Scheduled";
+        }
+
+
+        public int CompareTo(Flight f)
+        {
+            return expectedTime.CompareTo(f.expectedTime);
         }
 
 
