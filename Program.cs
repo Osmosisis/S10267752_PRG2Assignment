@@ -172,7 +172,6 @@ void AssignBoardingGate()
 
     }
     Console.WriteLine($"Flight {flightno} has been assigned to Boarding Gate {boardinggate}!");
-    Term5.boardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
 }
 
 
