@@ -23,9 +23,9 @@ namespace S10267752_PRGassignment2
             set { terminalname = value; }
         }
 
-        public Dictionary<string, Flight> flights { get; set; } = new Dictionary<string, Flight>();
-        public Dictionary<string, Airline> airlines { get; set; } = new Dictionary<string, Airline>();
-        public Dictionary<string, BoardingGate> boardingGates { get; set; } = new Dictionary<string, BoardingGate>();
+        public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>();
+        public Dictionary<string, Airline> Airlines { get; set; } = new Dictionary<string, Airline>();
+        public Dictionary<string, BoardingGate> BoardingGates { get; set; } = new Dictionary<string, BoardingGate>();
         public Dictionary<string, double> GateFees { get; set; } = new Dictionary<string, double>();
 
 
@@ -41,9 +41,9 @@ namespace S10267752_PRGassignment2
             {
                 throw new ArgumentNullException(nameof(airline), "Airline cannot be null.");
             }
-            if (!airlines.ContainsKey(airline.Name))
+            if (!Airlines.ContainsKey(airline.Name))
             {
-                airlines.Add(airline.Name, airline);
+                Airlines.Add(airline.Name, airline);
                 return true;
             }
             return false;
@@ -54,9 +54,9 @@ namespace S10267752_PRGassignment2
             {
                 throw new ArgumentNullException(nameof(boardingGate), "Airline cannot be null.");
             }
-            if (!airlines.ContainsKey(boardingGate.GateName))
+            if (!Airlines.ContainsKey(boardingGate.GateName))
             {
-                boardingGates.Add(boardingGate.GateName, boardingGate);
+                BoardingGates.Add(boardingGate.GateName, boardingGate);
                 return true;
             }
             return false;
@@ -79,11 +79,11 @@ namespace S10267752_PRGassignment2
                 if (airpre == airlineread[s])
                 {
                     string airname = s;
-                    foreach (string w in airlines.Keys)
+                    foreach (string w in Airlines.Keys)
                     {
                         if (airname == w)
                         {
-                            return airlines[w];
+                            return Airlines[w];
                         }
                     }
                 }
