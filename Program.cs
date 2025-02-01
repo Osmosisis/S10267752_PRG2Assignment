@@ -7,9 +7,8 @@ using S10267752_PRGassignment2;
 // Partner Name	: Yoshihiro Chan
 //==========================================================
 
-Dictionary<string, Airline> newair = new Dictionary<string, Airline>();
-Dictionary<string, BoardingGate> newboard = new Dictionary<string, BoardingGate>();
-Dictionary<string, Flight> newflight = new Dictionary<string, Flight>();
+
+Terminal Term5 = new Terminal();
 
 // Basic Feature 1
 void initAirlines()
@@ -19,9 +18,9 @@ void initAirlines()
     {
         string[] t = s.Split(',');
         Airline airinit = new Airline(t[0], t[1]);
-        if (!newair.ContainsKey(t[1]))
+        if (!Term5.airlines.ContainsKey(t[1]))
         {
-            newair.Add(t[1], airinit); 
+            Term5.airlines.Add(t[1], airinit); 
         }
     }
 }
@@ -41,9 +40,9 @@ void initBoardingGates()
         BoardingGate gate = new BoardingGate(gateName, supportsCFFT, supportsDDJB, supportsLWTT);
 
         // Add to the newboard dictionary
-        if (!newboard.ContainsKey(gateName))
+        if (!Term5.boardingGates.ContainsKey(gateName))
         {
-            newboard.Add(gateName, gate);
+            Term5.boardingGates.Add(gateName, gate);
         }
     }
 }
@@ -75,10 +74,10 @@ void initFlights()
             f = new CFFTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
         }
 
-        newflight.Add(t[0], f); //changed it to this as the keys need to be unique or we cant add all the flights
+        Term5.flights.Add(t[0], f); //changed it to this as the keys need to be unique or we cant add all the flights
 
         string airlinecode = t[0].Substring(0,2);
-        newair[airlinecode].AddFlight(f);
+        Term5.airlines[airlinecode].AddFlight(f);
     }
 }
 
@@ -105,7 +104,7 @@ List of Boarding Gates for Changi Airport Terminal 5
 =============================================
 ");
     Console.WriteLine("Gate Name \tDDJB \tCFFT \tLWTT");
-    foreach (var gate in newboard.Values)
+    foreach (var gate in Term5.boardingGates.Values)
     {
         Console.WriteLine($"{gate.GateName, -10} \t{gate.SupportDDJB} \t{gate.SupportCFFT} \t{gate.SupportLWTT}");
     }
@@ -118,7 +117,7 @@ void AssignBoardingGate()
     string flightno = Console.ReadLine();
     string airlinecode = flightno.Substring(0,2);
 
-    Airline airline = newair[airlinecode];
+    Airline airline = Term5.airlines[airlinecode];
     Console.WriteLine(airline.flights[flightno].ToString());
 
 
@@ -128,7 +127,7 @@ void AssignBoardingGate()
     string boardinggate = Console.ReadLine();
     while (true)
     {
-        if (newboard[boardinggate].Flight == null)
+        if (Term5.boardingGates[boardinggate].Flight == null)
         {
             break;
         }
@@ -214,7 +213,7 @@ void CreateNewFlight()
 
         
         string airlinecode = flightno.Substring(0,2);
-        newair[airlinecode].AddFlight(f);
+        Term5.airlines[airlinecode].AddFlight(f);
         System.Console.WriteLine($"Flight {flightno} has been added!");
         System.Console.WriteLine("Would you like to add another flight? (Y/N)");
         string option = Console.ReadLine();
@@ -236,19 +235,19 @@ void ListAirlines()
 List of Airlines for Changi Airport Terminal 5
 =============================================
 ");
-    foreach (var air in newair.Keys)
+    foreach (var air in Term5.airlines.Keys)
     {
-        Console.WriteLine($"{newair[air].Code, -15} {newair[air].Name}");
+        Console.WriteLine($"{Term5.airlines[air].Code, -15} {Term5.airlines[air].Name}");
     }
     Console.Write("Enter Airline Code: ");
     string aircode = Console.ReadLine();
-    Console.WriteLine($"=============================================\r\nList of Flights for {newair[aircode].Name}\r\n=============================================\r\n");
+    Console.WriteLine($"=============================================\r\nList of Flights for {Term5.airlines[aircode].Name}\r\n=============================================\r\n");
     Console.WriteLine($"{"Flight Number", -15} {"Airline Name", -18} {"Origin", -15} {"Destination", -15} {"Expected Departure/Arrival Time"}");
-    foreach (var f in newflight.Keys)
+    foreach (var f in Term5.flights.Keys)
     {
         if (f.Substring(0, 2) == aircode)
         {
-            Console.Write($"\n{newflight[f].FlightNumber, -15} {newair[aircode].Name,-18} {newflight[f].Origin,-15} {newflight[f].Destination,-15} {newflight[f].ExpectedTime}");
+            Console.Write($"\n{Term5.flights[f].FlightNumber, -15} {Term5.airlines[aircode].Name,-18} {Term5.flights[f].Origin,-15} {Term5.flights[f].Destination,-15} {Term5.flights[f].ExpectedTime}");
         }
     }
 }
@@ -260,24 +259,24 @@ void modifyFlightDetails()
 List of Airlines for Changi Airport Terminal 5
 =============================================
 ");
-    foreach (var air in newair.Keys)
+    foreach (var air in Term5.airlines.Keys)
     {
-        Console.WriteLine($"{newair[air].Code,-15} {newair[air].Name}");
+        Console.WriteLine($"{Term5.airlines[air].Code,-15} {Term5.airlines[air].Name}");
     }
     Console.Write("Enter Airline Code: ");
     string aircode = Console.ReadLine();
-    Console.WriteLine($"=============================================\r\nList of Flights for {newair[aircode].Name}\r\n=============================================\r\n");
+    Console.WriteLine($"=============================================\r\nList of Flights for {Term5.airlines[aircode].Name}\r\n=============================================\r\n");
     Console.WriteLine($"{"Flight Number",-15} {"Airline Name",-18} {"Origin",-15} {"Destination",-15} {"Expected Departure/Arrival Time"}");
-    foreach (var f in newflight.Keys)
+    foreach (var f in Term5.flights.Keys)
     {
         if (f.Substring(0, 2) == aircode)
         {
-            Console.Write($"\n{newflight[f].FlightNumber,-15} {newair[aircode].Name,-18} {newflight[f].Origin,-15} {newflight[f].Destination,-15} {newflight[f].ExpectedTime}");
+            Console.Write($"\n{Term5.flights[f].FlightNumber,-15} {Term5.airlines[aircode].Name,-18} {Term5.flights[f].Origin,-15} {Term5.flights[f].Destination,-15} {Term5.flights[f].ExpectedTime}");
         }
     }
     Console.Write("\nChoose an existing Flight to modify or delete: ");
     string flight2change = Console.ReadLine();
-    Flight chosenflight = newflight[flight2change];
+    Flight chosenflight = Term5.flights[flight2change];
     Console.Write(@"
 1. Modify Flight
 2. Delete Flight
@@ -295,16 +294,16 @@ Choose an option: ");
         if (secondchosen == 1)
         {
             Console.Write("Enter new Origin: ");
-            newflight[flight2change].Origin = Console.ReadLine();
+            Term5.flights[flight2change].Origin = Console.ReadLine();
             Console.Write("Enter new Destination: ");
-            newflight[flight2change].Destination = Console.ReadLine();
+            Term5.flights[flight2change].Destination = Console.ReadLine();
             Console.Write("Enter new Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
-            newflight[flight2change].ExpectedTime = Convert.ToDateTime(Console.ReadLine());
+            Term5.flights[flight2change].ExpectedTime = Convert.ToDateTime(Console.ReadLine());
         }
         else if (secondchosen == 2)
         {
             Console.Write("Enter new Status [On Time/Delayed/Boarding]: ");
-            newflight[flight2change].Status = Console.ReadLine();
+            Term5.flights[flight2change].Status = Console.ReadLine();
         }
         else if (secondchosen == 3)
         {
@@ -335,16 +334,16 @@ Choose an option: ");
         {
             Console.Write("Enter new Boarding Gate: ");
             string boardgatename = Console.ReadLine();
-            if (newboard.ContainsKey(boardgatename))
+            if (Term5.boardingGates.ContainsKey(boardgatename))
             {
-                BoardingGate chosenboard = newboard[boardgatename];
+                BoardingGate chosenboard = Term5.boardingGates[boardgatename];
                 chosenboard.Flight = chosenflight;
             }
         }
-        Console.WriteLine($"Flight Updated!\nFlight Number: {newflight[flight2change].FlightNumber}\nAirline Name: {newair[aircode].Name}\nOrigin: {newflight[flight2change].Origin}\nDestination: {newflight[flight2change].Destination}\nExpected Departure/Arrival Time: {newflight[flight2change].ExpectedTime}");
-        if (newflight[flight2change].Status != null)
+        Console.WriteLine($"Flight Updated!\nFlight Number: {Term5.flights[flight2change].FlightNumber}\nAirline Name: {Term5.airlines[aircode].Name}\nOrigin: {Term5.flights[flight2change].Origin}\nDestination: {Term5.flights[flight2change].Destination}\nExpected Departure/Arrival Time: {Term5.flights[flight2change].ExpectedTime}");
+        if (Term5.flights[flight2change].Status != null)
         {
-            Console.WriteLine($"\nStatus: {newflight[flight2change].Status}"); // if flight obj has status, display
+            Console.WriteLine($"\nStatus: {Term5.flights[flight2change].Status}"); // if flight obj has status, display
         }
     }
     else if (chosen == 2)
@@ -353,7 +352,7 @@ Choose an option: ");
         string option = Console.ReadLine().ToLower();
         if (option == "y")
         {
-            newflight.Remove(flight2change);
+            Term5.flights.Remove(flight2change);
         }
     }
 }
