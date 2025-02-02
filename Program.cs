@@ -99,21 +99,6 @@ int initFlights()
 
 void ListAllFlights()
 {
-    // List<Flight> flightlist = new List<Flight>();
-    // foreach(KeyValuePair<string,Airline> a in term5.Airlines)
-    // {
-    //     foreach(KeyValuePair<string,Flight> f in a.Value.Flights)
-    //     {
-    //         flightlist.Add(f.Value);
-    //     }
-        
-    // }     
-    // flightlist.Sort();
-    // foreach(Flight f in flightlist)
-    // {
-    //         Console.WriteLine(f.ToString());
-    // }
-
     foreach(KeyValuePair<string,Airline> a in term5.Airlines)
     {
         System.Console.WriteLine(a.Value.ToString());
@@ -862,6 +847,153 @@ void DisplayFlightSchedule()
 
 // Advanced Featrue (a)
 
+string BulkAssign(Terminal t)
+{
+    string ret = "No Gates Assigned";
+    string src = "None";
+    int total = 0;
+    int alreadyassiged = 0;
+    List<string> opengates = new List<string>();
+    Queue<Flight> flightqueue = new Queue<Flight>();
+    try
+    {
+        // Check if there are any airlines in the system
+        if (term5.Airlines == null || term5.Airlines.Count == 0)
+        {
+            Console.WriteLine("Error: No airlines found in the system.");
+            return ret;
+        }
+
+        List<Flight> flightlist = new List<Flight>();
+
+        // Iterate through airlines and their flights
+        foreach (KeyValuePair<string, Airline> a in term5.Airlines)
+        {
+            // Validate airline code
+            if (string.IsNullOrEmpty(a.Key) || a.Key.Length != 2)
+            {
+                Console.WriteLine($"Error: Invalid airline code '{a.Key}'. Skipping this airline.");
+                continue;
+            }
+
+            // Validate flights for the airline
+            if (a.Value.Flights == null || a.Value.Flights.Count == 0)
+            {
+                Console.WriteLine($"Warning: No flights found for airline '{a.Key}'. Skipping this airline.");
+                continue;
+            }
+
+            foreach (KeyValuePair<string, Flight> f in a.Value.Flights)
+            {
+                // Validate flight number
+                if (string.IsNullOrEmpty(f.Key) || f.Key.Length < 2)
+                {
+                    Console.WriteLine($"Error: Invalid flight number '{f.Key}'. Skipping this flight.");
+                    continue;
+                }
+
+                // Validate flight object
+                if (f.Value == null)
+                {
+                    Console.WriteLine($"Error: Flight data is null for flight number '{f.Key}'. Skipping this flight.");
+                    continue;
+                }
+
+                flightlist.Add(f.Value);
+            }
+        }
+
+        // Sort the flight list
+        flightlist.Sort();
+        // Adds flights with no gate from list to queue
+        foreach (Flight f in flightlist)
+        if (f.GetBoardingGate(term5) == null)
+        {
+            flightqueue.Enqueue(f);
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error: An unexpected error occurred in the DisplayFlightSchedule method. Details: {ex.Message}");
+    }
+
+
+    foreach (KeyValuePair<string, BoardingGate> g in term5.BoardingGates)
+    {
+        if (term5.BoardingGates[g.Value.GateName].Flight == null )
+        {
+            opengates.Append(g.Value.GateName);
+        }
+        else
+        {
+            alreadyassiged++;
+        }
+    }
+
+    System.Console.WriteLine($"Number of unused gates: {opengates.Count()}");
+
+
+
+    for (int i = 0; i < flightqueue.Count(); i++)
+    {
+        Flight f = flightqueue.Dequeue();
+        if (f is LWTTFlight)
+        {
+            src = "LWTT";
+            for (int j = 0; j < opengates.Count(); j++)
+            if (term5.BoardingGates[opengates[j]].SupportLWTT == true)
+            {
+                term5.BoardingGates[opengates[j]].Flight = f; 
+                opengates.Remove(opengates[j]);
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
+                total++;
+                break;
+            }
+        }
+        else if (f is DDJBFlight)
+        {
+            src = "DDJB";
+            for (int j = 0; j < opengates.Count(); j++)
+            if (term5.BoardingGates[opengates[j]].SupportDDJB == true)
+            {
+                term5.BoardingGates[opengates[j]].Flight = f; 
+                opengates.Remove(opengates[j]);
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
+                total++;
+                break;
+            }
+        }
+        else if (f is CFFTFlight)
+        {
+            src = "LWTT";
+            for (int j = 0; j < opengates.Count(); j++)
+            if (term5.BoardingGates[opengates[j]].SupportCFFT == true)
+            {
+                term5.BoardingGates[opengates[j]].Flight = f; 
+                opengates.Remove(opengates[j]);
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
+                total++;
+                break;
+            }
+        }
+        else
+        {
+            for (int j = 0; j < opengates.Count(); j++)
+            if ((term5.BoardingGates[opengates[j]].SupportLWTT == false) && (term5.BoardingGates[opengates[j]].SupportDDJB == false) && (term5.BoardingGates[opengates[j]].SupportCFFT == false))
+            {
+                term5.BoardingGates[opengates[j]].Flight = f; 
+                opengates.Remove(opengates[j]);
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
+                total++;
+                break;
+            }
+        }
+    }
+    Console.WriteLine($"Total number of Flights and Boarding Gates processed and assigned: {total}");
+    double percentage = (total/alreadyassiged)*100;
+    System.Console.WriteLine($"Total number of Flights and Boarding Gates that were processed automatically over those that were already assigned as a percentage: {percentage:F2}");
+    return ret;
+}
 // Advanced Feature (b)
 
 

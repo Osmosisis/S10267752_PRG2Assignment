@@ -66,6 +66,20 @@ namespace S10267752_PRGassignment2
             return expectedTime.CompareTo(f.expectedTime);
         }
 
+        public BoardingGate GetBoardingGate(Terminal t)
+        {
+            BoardingGate gate = null;
+            foreach (KeyValuePair<string, BoardingGate> g in t.BoardingGates)
+            {
+                if (g.Value.Flight != null && g.Value.Flight.FlightNumber == flightNumber)
+                {
+                    gate = g.Value;
+                    break;
+                }
+            }
+            return gate;
+        }
+
 
 // Arriving Flight	$500	Arriving Flights are Flights with Destination as Singapore (SIN)
 // Departing Flight	$800	Departing Flights are Flights with Origin as Singapore (SIN)
