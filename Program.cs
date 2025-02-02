@@ -149,7 +149,7 @@ void AssignBoardingGate()
     Console.WriteLine("Enter Flight Number: ");
     string flightno = Console.ReadLine();
     Flight chosenflight = term5.Flights[flightno]; // made it a Flight obj
-    string airlinecode = flightno.Substring(0,2);
+    string airlinecode = flightno.Substring(0, 2);
 
     Airline airline = term5.Airlines[airlinecode];
     Console.WriteLine(airline.Flights[flightno].ToString());
@@ -192,7 +192,7 @@ void AssignBoardingGate()
         }
         if (cont == true)
         {
-            if (term5.BoardingGates[boardinggate].Flight == null )
+            if (term5.BoardingGates[boardinggate].Flight == null)
             {
                 term5.BoardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
                 break;
@@ -231,6 +231,8 @@ void AssignBoardingGate()
     }
     Console.WriteLine($"Flight {flightno} has been assigned to Boarding Gate {boardinggate}!");
 }
+
+
 
 
 // Basic Feature 6
@@ -740,126 +742,54 @@ Choose an option: ");
 
 void DisplayFlightSchedule()
 {
-    try
+    List<Flight> flightlist = new List<Flight>();
+    foreach (KeyValuePair<string, Airline> a in term5.Airlines)
     {
-        // Check if there are any airlines in the system
-        if (term5.Airlines == null || term5.Airlines.Count == 0)
+        foreach (KeyValuePair<string, Flight> f in a.Value.Flights)
         {
-            Console.WriteLine("Error: No airlines found in the system.");
-            return;
+            flightlist.Add(f.Value);
         }
 
-        List<Flight> flightlist = new List<Flight>();
-
-        // Iterate through airlines and their flights
-        foreach (KeyValuePair<string, Airline> a in term5.Airlines)
-        {
-            // Validate airline code
-            if (string.IsNullOrEmpty(a.Key) || a.Key.Length != 2)
-            {
-                Console.WriteLine($"Error: Invalid airline code '{a.Key}'. Skipping this airline.");
-                continue;
-            }
-
-            // Validate flights for the airline
-            if (a.Value.Flights == null || a.Value.Flights.Count == 0)
-            {
-                Console.WriteLine($"Warning: No flights found for airline '{a.Key}'. Skipping this airline.");
-                continue;
-            }
-
-            foreach (KeyValuePair<string, Flight> f in a.Value.Flights)
-            {
-                // Validate flight number
-                if (string.IsNullOrEmpty(f.Key) || f.Key.Length < 2)
-                {
-                    Console.WriteLine($"Error: Invalid flight number '{f.Key}'. Skipping this flight.");
-                    continue;
-                }
-
-                // Validate flight object
-                if (f.Value == null)
-                {
-                    Console.WriteLine($"Error: Flight data is null for flight number '{f.Key}'. Skipping this flight.");
-                    continue;
-                }
-
-                flightlist.Add(f.Value);
-            }
-        }
-
-        // Check if any flights were added to the list
-        if (flightlist.Count == 0)
-        {
-            Console.WriteLine("Error: No valid flights found to display.");
-            return;
-        }
-
-        // Sort the flight list
-        flightlist.Sort();
-
-        // Display flight details
-        foreach (Flight f in flightlist)
-        {
-            try
-            {
-                string src = "None"; // Default special request code
-                string gate = "Unassigned"; // Default boarding gate
-
-                // Validate flight number format
-                if (string.IsNullOrEmpty(f.FlightNumber) || f.FlightNumber.Length < 2)
-                {
-                    Console.WriteLine($"Error: Invalid flight number '{f.FlightNumber}'. Skipping this flight.");
-                    continue;
-                }
-
-                // Determine special request code
-                if (f is DDJBFlight)
-                {
-                    src = "DDJB";
-                }
-                else if (f is LWTTFlight)
-                {
-                    src = "LWTT";
-                }
-                else if (f is CFFTFlight)
-                {
-                    src = "CFFT";
-                }
-
-                // Find the boarding gate for the flight
-                foreach (KeyValuePair<string, BoardingGate> g in term5.BoardingGates)
-                {
-                    if (g.Value.Flight != null && g.Value.Flight.FlightNumber == f.FlightNumber)
-                    {
-                        gate = g.Value.GateName;
-                        break;
-                    }
-                }
-
-                // Validate airline code
-                string airlinecode = f.FlightNumber.Substring(0, 2);
-                if (!term5.Airlines.ContainsKey(airlinecode))
-                {
-                    Console.WriteLine($"Error: Invalid airline code '{airlinecode}' for flight '{f.FlightNumber}'. Skipping this flight.");
-                    continue;
-                }
-
-                // Display flight details
-                Console.WriteLine($"Flight Number: {f.FlightNumber} \nAirline Name: {term5.Airlines[airlinecode].Name} \nOrigin: {f.Origin} \nDestination: {f.Destination} \nExpected Time: {f.ExpectedTime} \nStatus: {f.Status} \nSpecial Request Code: {src} \nBoarding Gate: {gate} \n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: An unexpected error occurred while processing flight '{f.FlightNumber}'. Details: {ex.Message}");
-            }
-        }
     }
-    catch (Exception ex)
+    flightlist.Sort();
+    foreach (Flight f in flightlist)
     {
-        Console.WriteLine($"Error: An unexpected error occurred in the DisplayFlightSchedule method. Details: {ex.Message}");
+        string src = null;
+        string gate = "Unassigned";
+        string airlinecode = f.FlightNumber.Substring(0, 2);
+        if (f is DDJBFlight)
+        {
+            src = "DDJB";
+        }
+        else if (f is LWTTFlight)
+        {
+            src = "LWTT";
+        }
+        else if (f is CFFTFlight)
+        {
+            src = "CFFT";
+        }
+        else
+        {
+            src = "None";
+        }
+
+        foreach (KeyValuePair<string, BoardingGate> g in term5.BoardingGates)
+        {
+            if (g.Value.Flight != null)
+            {
+                if (g.Value.Flight.FlightNumber == f.FlightNumber)
+                {
+                    gate = g.Value.GateName;
+                }
+            }
+
+        }
+        //, Status, Special Request Code (if any) and Boarding Gate 
+        Console.WriteLine($"Flight Number: {f.FlightNumber} \nAirline Name: {term5.Airlines[airlinecode].Name} \nOrigin: {f.Origin} \nDestination: {f.Destination} \nExpected Time: {f.ExpectedTime} \nStatus: {f.Status} \nSpecial Request Code: {src} \nBoarding Gate: {gate} \n");
+
     }
 }
-
 // Advanced Featrue (a)
 
 // Advanced Feature (b)
