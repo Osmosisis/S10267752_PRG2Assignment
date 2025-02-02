@@ -366,6 +366,7 @@ void ModifyFlightDetails()
 List of Airlines for Changi Airport Terminal 5
 =============================================
 ");
+    Console.WriteLine($"{"Airline Code", -15} {"Airline Name"}");
     foreach (var air in term5.Airlines.Keys)
     {
         Console.WriteLine($"{term5.Airlines[air].Code,-15} {term5.Airlines[air].Name}");
