@@ -398,6 +398,7 @@ List of Airlines for Changi Airport Terminal 5
 ");
     foreach (var air in term5.Airlines.Keys)
     {
+        Console.WriteLine($"{"Airline Code",-15} {"Airline Name"}");
         Console.WriteLine($"{term5.Airlines[air].Code,-15} {term5.Airlines[air].Name}");
     }
 
@@ -863,7 +864,49 @@ void DisplayFlightSchedule()
 // Advanced Featrue (a)
 
 // Advanced Feature (b)
+void TotalAirlineFees()
+{
+    Console.WriteLine("\n=============================================");
+    Console.WriteLine("Total Fees Per Airline for the Day");
+    Console.WriteLine("=============================================");
 
+    foreach (Airline airline in term5.Airlines.Values)
+    {
+        double totalFees = 0;
+        double discount = 0;
+        int flightCount = airline.Flights.Count;
+
+        // checking that all flights are assigned to a boarding gate
+        foreach (Flight flight in airline.Flights.Values)
+        {
+            bool assigned = false;
+            foreach (BoardingGate gate in term5.BoardingGates.Values)
+            {
+                if (gate.Flight == flight)
+                {
+                    assigned = true;
+                    break;
+                }
+            }
+            if (!assigned)
+            {
+                Console.WriteLine($"Error: Flight {flight.FlightNumber} is not assigned to a boarding gate.");
+                return;
+            }
+        }
+
+        // Calculate total fees using the Airline's CalculateFees method
+        totalFees = airline.CalculateFees();
+
+        double finalTotal = totalFees;
+
+        // Display results
+        Console.WriteLine($"Airline: {airline.Name} ({airline.Code})");
+        Console.WriteLine($"Subtotal Fees: ${totalFees:F2}");
+        Console.WriteLine($"Final Total Fees: ${finalTotal:F2}");
+        Console.WriteLine("=============================================");
+    }
+}
 
 
 
