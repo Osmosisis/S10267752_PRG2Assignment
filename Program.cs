@@ -852,7 +852,7 @@ string BulkAssign(Terminal t)
 {
     string ret = "No Gates Assigned";
     string src = "None";
-    int total = 0;
+    double totalautoadded = 0;
     int gatelessflights = 0;
     int flightlessgates = 0;
     int alreadyassiged = 0;
@@ -921,6 +921,8 @@ string BulkAssign(Terminal t)
     {
         Console.WriteLine($"Error: An unexpected error occurred in the DisplayFlightSchedule method. Details: {ex.Message}");
     }
+    Console.WriteLine($"Number of flights with no assigned boarding gate: {gatelessflights}");
+
 
 
     foreach (KeyValuePair<string, BoardingGate> g in term5.BoardingGates)
@@ -936,7 +938,7 @@ string BulkAssign(Terminal t)
         }
     }
 
-    System.Console.WriteLine($"Number of unused gates: {opengates.Count()}");
+    Console.WriteLine($"Number of unused gates: {flightlessgates}");
 
 
 
@@ -952,7 +954,7 @@ string BulkAssign(Terminal t)
                 term5.BoardingGates[opengates[j]].Flight = f; 
 				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-                total++;
+                totalautoadded++;
                 break;
             }
         }
@@ -965,7 +967,7 @@ string BulkAssign(Terminal t)
                 term5.BoardingGates[opengates[j]].Flight = f; 
 				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-                total++;
+                totalautoadded++;
                 break;
             }
         }
@@ -978,7 +980,7 @@ string BulkAssign(Terminal t)
                 term5.BoardingGates[opengates[j]].Flight = f; 
 				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-                total++;
+                totalautoadded++;
                 break;
             }
         }
@@ -990,17 +992,18 @@ string BulkAssign(Terminal t)
                 term5.BoardingGates[opengates[j]].Flight = f; 
 				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-                total++;
+                totalautoadded++;
                 break;
             }
         }
     }
     gatelessflights = flightqueue.Count();
     flightlessgates = opengates.Count();
-    Console.WriteLine($"Total number of Flights and Boarding Gates processed and assigned: {total}");
+    Console.WriteLine($"Total number of Flights and Boarding Gates processed and assigned: {totalautoadded}");
     if (alreadyassiged > 0)
     {
-        percentage = (total/alreadyassiged)*100;
+        double totalflights = term5.Flights.Count();
+        percentage = (totalautoadded/totalflights)*100;
     }
     System.Console.WriteLine($"Total number of Flights and Boarding Gates that were processed automatically over those that were already assigned as a percentage: {percentage:F2}%");
     return ret;
