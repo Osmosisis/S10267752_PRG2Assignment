@@ -23,7 +23,7 @@ int initAirlines()
         Airline airinit = new Airline(t[0], t[1]);
         if (!term5.Airlines.ContainsKey(t[1]))
         {
-            term5.Airlines.Add(t[1], airinit); 
+            term5.Airlines.Add(t[1], airinit);
             total++;
         }
     }
@@ -34,7 +34,7 @@ int initBoardingGates()
 {
     int total = 0;
     string[] a = File.ReadAllLines("boardinggates.csv");
-    foreach (string line in a.Skip(1)) 
+    foreach (string line in a.Skip(1))
     {
         string[] parts = line.Split(',');
         // Parse and validate the data
@@ -57,7 +57,7 @@ int initBoardingGates()
 }
 // Basic Feature 2
 int initFlights()
-{   
+{
     int total = 0;
     string[] a = File.ReadAllLines("flights.csv");
     string[] header = a[0].Split(",");
@@ -66,26 +66,26 @@ int initFlights()
         Flight f = null;
         string[] t = s.TrimEnd().Split(',');
 
-        if (t[t.Length-1] == "")
+        if (t[t.Length - 1] == "")
         {
-            f = new NORMFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
+            f = new NORMFlight(t[0], t[1], t[2], DateTime.Parse(t[3]));
         }
-        else if (t[t.Length-1] == "DDJB")
+        else if (t[t.Length - 1] == "DDJB")
         {
-            f = new DDJBFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
+            f = new DDJBFlight(t[0], t[1], t[2], DateTime.Parse(t[3]));
         }
-        else if (t[t.Length-1] == "LWTT")
+        else if (t[t.Length - 1] == "LWTT")
         {
-            f = new LWTTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
+            f = new LWTTFlight(t[0], t[1], t[2], DateTime.Parse(t[3]));
         }
-        else if (t[t.Length-1] == "CFFT")
+        else if (t[t.Length - 1] == "CFFT")
         {
-            f = new CFFTFlight(t[0], t[1],t[2],DateTime.Parse(t[3]));
+            f = new CFFTFlight(t[0], t[1], t[2], DateTime.Parse(t[3]));
         }
 
         term5.Flights.Add(t[0], f); //changed it to this as the keys need to be unique or we cant add all the flights
 
-        string airlinecode = t[0].Substring(0,2);
+        string airlinecode = t[0].Substring(0, 2);
         term5.Airlines[airlinecode].AddFlight(f);
         total++;
     }
@@ -134,7 +134,7 @@ void AssignBoardingGate()
     Console.WriteLine("Enter Flight Number: ");
     string flightno = Console.ReadLine();
     Flight chosenflight = term5.Flights[flightno]; // made it a Flight obj
-    string airlinecode = flightno.Substring(0,2);
+    string airlinecode = flightno.Substring(0, 2);
 
     Airline airline = term5.Airlines[airlinecode];
     Console.WriteLine(airline.Flights[flightno].ToString());
@@ -177,7 +177,7 @@ void AssignBoardingGate()
         }
         if (cont == true)
         {
-            if (term5.BoardingGates[boardinggate].Flight == null )
+            if (term5.BoardingGates[boardinggate].Flight == null)
             {
                 term5.BoardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
                 break;
@@ -383,6 +383,7 @@ List of Airlines for Changi Airport Terminal 5
 ");
     foreach (var air in term5.Airlines.Keys)
     {
+        Console.WriteLine($"{"Airline Code",-15} {"Airline Name"}");
         Console.WriteLine($"{term5.Airlines[air].Code,-15} {term5.Airlines[air].Name}");
     }
 
@@ -431,7 +432,7 @@ void ModifyFlightDetails()
 List of Airlines for Changi Airport Terminal 5
 =============================================
 ");
-    Console.WriteLine($"{"Airline Code", -15} {"Airline Name"}");
+    Console.WriteLine($"{"Airline Code",-15} {"Airline Name"}");
     foreach (var air in term5.Airlines.Keys)
     {
         Console.WriteLine($"{term5.Airlines[air].Code,-15} {term5.Airlines[air].Name}");
@@ -995,7 +996,49 @@ string BulkAssign(Terminal t)
     return ret;
 }
 // Advanced Feature (b)
+void TotalAirlineFees()
+{
+    Console.WriteLine("\n=============================================");
+    Console.WriteLine("Total Fees Per Airline for the Day");
+    Console.WriteLine("=============================================");
 
+    foreach (Airline airline in term5.Airlines.Values)
+    {
+        double totalFees = 0;
+        double discount = 0;
+        int flightCount = airline.Flights.Count;
+
+        // checking that all flights are assigned to a boarding gate
+        foreach (Flight flight in airline.Flights.Values)
+        {
+            bool assigned = false;
+            foreach (BoardingGate gate in term5.BoardingGates.Values)
+            {
+                if (gate.Flight == flight)
+                {
+                    assigned = true;
+                    break;
+                }
+            }
+            if (!assigned)
+            {
+                Console.WriteLine($"Error: Flight {flight.FlightNumber} is not assigned to a boarding gate.");
+                return;
+            }
+        }
+
+        // Calculate total fees using the Airline's CalculateFees method
+        totalFees = airline.CalculateFees();
+
+        double finalTotal = totalFees;
+
+        // Display results
+        Console.WriteLine($"Airline: {airline.Name} ({airline.Code})");
+        Console.WriteLine($"Subtotal Fees: ${totalFees:F2}");
+        Console.WriteLine($"Final Total Fees: ${finalTotal:F2}");
+        Console.WriteLine("=============================================");
+    }
+}
 
 
 
@@ -1030,7 +1073,6 @@ Welcome to Changi Airport Terminal 5
 6. Modify Flight Details
 7. Display Flight Schedule
 0. Exit
-
 Please select your option: ");
 
         string input = Console.ReadLine();
@@ -1094,4 +1136,3 @@ Please select your option: ");
         Console.WriteLine($"Error: An unexpected error occurred. Details: {ex.Message}");
     }
 }
-
