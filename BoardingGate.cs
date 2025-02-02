@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
 //==========================================================
 // Student Number	: S10267752
 // Student Name	: Osmond Lim
@@ -74,6 +76,11 @@ namespace S10267752_PRGassignment2
 
             return totalFee;
         }
+
+		public static bool IsValidCode(string s)
+		{
+			return Regex.IsMatch(s, @"^[A-C](1?\d|2[0-2])$");
+		}
 
         public override string ToString()
         {

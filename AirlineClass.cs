@@ -142,6 +142,10 @@ namespace S10267752_PRGassignment2
             return total;
         }
 
+		public static bool IsValidCode(string s)
+		{
+			return (s.Length == 2) && s.All(char.IsLetter) && s.All(char.IsUpper);
+		}
 
 		public override string ToString()
 		{

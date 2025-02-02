@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
 
 namespace S10267752_PRGassignment2
 {
@@ -79,6 +81,11 @@ namespace S10267752_PRGassignment2
             }
             return gate;
         }
+
+        public static bool IsValidCode(string s)
+        {
+            return Regex.IsMatch(s, @"^[A-Z]{2} \d{3}$");
+        } 
 
 
 // Arriving Flight	$500	Arriving Flights are Flights with Destination as Singapore (SIN)

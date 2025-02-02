@@ -20,14 +20,20 @@ int initAirlines()
     foreach (string s in a.Skip(1))
     {
         string[] t = s.Split(',');
-        Airline airinit = new Airline(t[0], t[1]);
-        if (!term5.Airlines.ContainsKey(t[1]))
+        if (!Airline.IsValidCode(t[1])) //validating airline code
         {
-            term5.Airlines.Add(t[1], airinit);
-            total++;
+            Console.WriteLine($"{t[1]} is an invalid Airline key, please ensure key consists of 2 Capital letters only");
+        }
+        else
+        {
+            Airline airinit = new Airline(t[0], t[1]);
+            if (!term5.Airlines.ContainsKey(t[1]))
+            {
+                term5.Airlines.Add(t[1], airinit);
+                total++;
+            }
         }
     }
-
     return total;
 }
 int initBoardingGates()
@@ -133,88 +139,107 @@ void AssignBoardingGate()
 {
     Console.WriteLine("Enter Flight Number: ");
     string flightno = Console.ReadLine();
-    Flight chosenflight = term5.Flights[flightno]; // made it a Flight obj
-    string airlinecode = flightno.Substring(0, 2);
-
-    Airline airline = term5.Airlines[airlinecode];
-    Console.WriteLine(airline.Flights[flightno].ToString());
-
-
-
-
-
-    Console.WriteLine("Enter Boarding Gate Name:");
-    String? boardinggate;
-
-
-    while (true)
+    if (!Flight.IsValidCode(flightno))
     {
-        bool cont = true;
-        boardinggate = Console.ReadLine();
-        if (chosenflight is LWTTFlight)
+        System.Console.WriteLine($"{flightno} is an invalid Flight number, please follow AB 123 format");
+    }
+    else
+    {
+        Flight chosenflight = term5.Flights[flightno]; // made it a Flight obj
+        string airlinecode = flightno.Substring(0, 2);
+
+        Airline airline = term5.Airlines[airlinecode];
+        Console.WriteLine(airline.Flights[flightno].ToString());
+
+        Console.WriteLine("Enter Boarding Gate Name:");
+        String? boardinggate;
+
+
+        while (true)
         {
-            if (term5.BoardingGates[boardinggate].SupportLWTT == false)
+            bool cont = true;
+            boardinggate = Console.ReadLine();
+            if (!BoardingGate.IsValidCode(boardinggate))
             {
-                System.Console.WriteLine("Gate does not support LWTT. Please Re-Enter Boarding Gate Name: ");
-                cont = false;
-            }
-        }
-        else if (chosenflight is DDJBFlight)
-        {
-            if (term5.BoardingGates[boardinggate].SupportDDJB == false)
-            {
-                System.Console.WriteLine("Gate does not support DDJB. Please Re-Enter Boarding Gate Name: ");
-                cont = false;
-            }
-        }
-        else if (chosenflight is CFFTFlight)
-        {
-            if (term5.BoardingGates[boardinggate].SupportCFFT == false)
-            {
-                System.Console.WriteLine("Gate does not support CFFT. Please Re-Enter Boarding Gate Name: ");
-                cont = false;
-            }
-        }
-        if (cont == true)
-        {
-            if (term5.BoardingGates[boardinggate].Flight == null)
-            {
-                term5.BoardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
+                System.Console.WriteLine($"{boardinggate} is an invalid boarding gate. Please pick a gate between A-C inclusive, Number between 1-22 inclusive");
                 break;
             }
             else
             {
-                Console.Write("Boarding gate is already assigned to another flight. Please Re-Enter Boarding Gate Name: ");
+                if (chosenflight is LWTTFlight)
+                {
+                    if (term5.BoardingGates[boardinggate].SupportLWTT == false)
+                    {
+                        System.Console.WriteLine("Gate does not support LWTT. Please Re-Enter Boarding Gate Name: ");
+                        cont = false;
+                    }
+                }
+                else if (chosenflight is DDJBFlight)
+                {
+                    if (term5.BoardingGates[boardinggate].SupportDDJB == false)
+                    {
+                        System.Console.WriteLine("Gate does not support DDJB. Please Re-Enter Boarding Gate Name: ");
+                        cont = false;
+                    }
+                }
+                else if (chosenflight is CFFTFlight)
+                {
+                    if (term5.BoardingGates[boardinggate].SupportCFFT == false)
+                    {
+                        System.Console.WriteLine("Gate does not support CFFT. Please Re-Enter Boarding Gate Name: ");
+                        cont = false;
+                    }
+                }
+                if (cont == true)
+                {
+                    if (term5.BoardingGates[boardinggate].Flight == null)
+                    {
+                        term5.BoardingGates[boardinggate].Flight = chosenflight; // added flight to boarding gate
+                        
+                    }
+                    else
+                    {
+                        Console.Write("Boarding gate is already assigned to another flight. Please Re-Enter Boarding Gate Name: ");
+                    }
+                }
             }
-        }
-    }
 
-    boardinggate.ToString();
-    Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
-    string option = Console.ReadLine();
-    if (option == "Y")
-    {
-        System.Console.WriteLine(@"1. Delayed
+            Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
+            string option = Console.ReadLine().ToUpper();
+            while (!(option == "Y" || option == "N"))
+            {
+                System.Console.WriteLine("Please enter (Y/N)");
+                option = Console.ReadLine().ToUpper();
+            }
+            if (option == "Y")
+            {
+                System.Console.WriteLine(@"1. Delayed
 2. Boarding
 3. On Time");
-        System.Console.WriteLine("Please select the new status of the flight: ");
-        option = Console.ReadLine();
-        if (option == "1")
-        {
-            airline.Flights[flightno].Status = "Delayed";
+                System.Console.WriteLine("Please select the new status of the flight: ");
+                option = Console.ReadLine();
+                while (!(option == "1" || option == "2" || option == "3"))
+                {
+                    System.Console.WriteLine("Please enter number between 1-3 inclusive: ");
+                    option = Console.ReadLine();
+                }
+                if (option == "1")
+                {
+                    airline.Flights[flightno].Status = "Delayed";
+                }
+                else if (option == "2")
+                {
+                    airline.Flights[flightno].Status = "Boarding";
+                }
+                else if (option == "3")
+                {
+                    airline.Flights[flightno].Status = "On Time";
+                }
+            }
+            Console.WriteLine($"Flight {flightno} has been assigned to Boarding Gate {boardinggate}!");
+            break;
         }
-        else if (option == "2")
-        {
-            airline.Flights[flightno].Status = "Boarding";
-        }
-        else if (option == "3")
-        {
-            airline.Flights[flightno].Status = "On Time";
-        }
-
-
     }
-    Console.WriteLine($"Flight {flightno} has been assigned to Boarding Gate {boardinggate}!");
 }
 
 
@@ -228,13 +253,13 @@ void CreateNewFlight()
         {
             // Validate Flight Number
             string flightno = "";
-            while (string.IsNullOrEmpty(flightno) || flightno.Length < 2)
+            while (string.IsNullOrEmpty(flightno) || (!Flight.IsValidCode(flightno)))
             {
                 Console.WriteLine("Enter Flight Number: ");
                 flightno = Console.ReadLine()?.Trim();
-                if (string.IsNullOrEmpty(flightno) || flightno.Length < 2)
+                if (string.IsNullOrEmpty(flightno) || (!Flight.IsValidCode(flightno)))
                 {
-                    Console.WriteLine("Error: Flight number cannot be empty and must be at least 2 characters long.");
+                    Console.WriteLine("Error: Flight number cannot be empty and must follow the AB 123 format");
                 }
             }
 
@@ -359,6 +384,11 @@ void CreateNewFlight()
             // Prompt to Add Another Flight
             Console.WriteLine("Would you like to add another flight? (Y/N)");
             string option = Console.ReadLine()?.Trim().ToUpper();
+            while (!(option == "Y" || option == "N"))
+            {
+                System.Console.WriteLine("Please enter (Y/N)");
+                option = Console.ReadLine()?.Trim().ToUpper();
+            }
             if (option == "N")
             {
                 cont = false;
@@ -757,7 +787,7 @@ void DisplayFlightSchedule()
             foreach (KeyValuePair<string, Flight> f in a.Value.Flights)
             {
                 // Validate flight number
-                if (string.IsNullOrEmpty(f.Key) || f.Key.Length < 2)
+                if (string.IsNullOrEmpty(f.Key) || (!Flight.IsValidCode(f.Key)))
                 {
                     Console.WriteLine($"Error: Invalid flight number '{f.Key}'. Skipping this flight.");
                     continue;
@@ -792,12 +822,6 @@ void DisplayFlightSchedule()
                 string src = "None"; // Default special request code
                 string gate = "Unassigned"; // Default boarding gate
 
-                // Validate flight number format
-                if (string.IsNullOrEmpty(f.FlightNumber) || f.FlightNumber.Length < 2)
-                {
-                    Console.WriteLine($"Error: Invalid flight number '{f.FlightNumber}'. Skipping this flight.");
-                    continue;
-                }
 
                 // Determine special request code
                 if (f is DDJBFlight)
@@ -846,7 +870,7 @@ void DisplayFlightSchedule()
     }
 }
 
-// Advanced Featrue (a)
+// Advanced Feature (a)
 
 string BulkAssign(Terminal t)
 {
@@ -855,7 +879,7 @@ string BulkAssign(Terminal t)
     double totalautoadded = 0;
     int gatelessflights = 0;
     int flightlessgates = 0;
-    int alreadyassiged = 0;
+    int alreadyassigned = 0;
     double percentage = 100;
     List<string> opengates = new List<string>();
     Queue<Flight> flightqueue = new Queue<Flight>();
@@ -890,7 +914,7 @@ string BulkAssign(Terminal t)
             foreach (KeyValuePair<string, Flight> f in a.Value.Flights)
             {
                 // Validate flight number
-                if (string.IsNullOrEmpty(f.Key) || f.Key.Length < 2)
+                if (string.IsNullOrEmpty(f.Key) || (!Flight.IsValidCode(f.Key)))
                 {
                     Console.WriteLine($"Error: Invalid flight number '{f.Key}'. Skipping this flight.");
                     continue;
@@ -934,7 +958,7 @@ string BulkAssign(Terminal t)
         }
         else
         {
-            alreadyassiged++;
+            alreadyassigned++;
         }
     }
 
@@ -1000,10 +1024,10 @@ string BulkAssign(Terminal t)
     gatelessflights = flightqueue.Count();
     flightlessgates = opengates.Count();
     Console.WriteLine($"Total number of Flights and Boarding Gates processed and assigned: {totalautoadded}");
-    if (alreadyassiged > 0)
+    if (alreadyassigned > 0)
     {
         double totalflights = term5.Flights.Count();
-        percentage = (totalautoadded/totalflights)*100;
+        percentage = (totalautoadded/Convert.ToDouble(alreadyassigned))*100;
     }
     System.Console.WriteLine($"Total number of Flights and Boarding Gates that were processed automatically over those that were already assigned as a percentage: {percentage:F2}%");
     return ret;
@@ -1085,6 +1109,8 @@ Welcome to Changi Airport Terminal 5
 5. Display Airline Flights
 6. Modify Flight Details
 7. Display Flight Schedule
+8. Process all unassigned flights to boarding gates in bulk
+9. Display the total fee per airline for the day
 0. Exit
 Please select your option: ");
 
@@ -1104,9 +1130,9 @@ Please select your option: ");
         }
 
         // Validate menu option
-        if (userinput < 0 || userinput > 8)
+        if (userinput < 0 || userinput > 9)
         {
-            Console.WriteLine("Error: Invalid option. Please enter a number between 0 and 7.");
+            Console.WriteLine("Error: Invalid option. Please enter a number between 0 and 9.");
             continue; // Prompt again
         }
 
@@ -1147,6 +1173,11 @@ Please select your option: ");
         {
             BulkAssign(term5);
         }
+        else if (userinput == 9)
+        {
+            TotalAirlineFees();
+        }
+
     }
     catch (Exception ex)
     {
