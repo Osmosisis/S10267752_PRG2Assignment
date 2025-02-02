@@ -148,7 +148,7 @@ namespace S10267752_PRGassignment2
 			string ret = null;
 			foreach (KeyValuePair<string, Flight> pair in flights)
 			{
-				ret += $"Flight Number: {pair.Value.FlightNumber}\nName: {name}\nOrigin: {pair.Value.Origin}\nDestination: {pair.Value.Destination}\nExpected Departure/Arrival: {pair.Value.ExpectedTime}\n\n";
+				ret += $"Flight Number: {pair.Value.FlightNumber}\nAirline Name: {name}\nOrigin: {pair.Value.Origin}\nDestination: {pair.Value.Destination}\nExpected Departure/Arrival: {pair.Value.ExpectedTime}\n\n";
 			}
 			ret += "\n";
 			return ret;

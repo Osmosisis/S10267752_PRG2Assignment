@@ -853,7 +853,10 @@ string BulkAssign(Terminal t)
     string ret = "No Gates Assigned";
     string src = "None";
     int total = 0;
+    int gatelessflights = 0;
+    int flightlessgates = 0;
     int alreadyassiged = 0;
+    double percentage = 100;
     List<string> opengates = new List<string>();
     Queue<Flight> flightqueue = new Queue<Flight>();
     try
@@ -911,6 +914,7 @@ string BulkAssign(Terminal t)
         if (f.GetBoardingGate(term5) == null)
         {
             flightqueue.Enqueue(f);
+            gatelessflights++;
         }
     }
     catch (Exception ex)
@@ -923,7 +927,8 @@ string BulkAssign(Terminal t)
     {
         if (term5.BoardingGates[g.Value.GateName].Flight == null )
         {
-            opengates.Append(g.Value.GateName);
+            opengates.Add(g.Value.GateName);
+            flightlessgates++;
         }
         else
         {
@@ -935,18 +940,18 @@ string BulkAssign(Terminal t)
 
 
 
-    for (int i = 0; i < flightqueue.Count(); i++)
+    for (int i = 0; i < gatelessflights; i++)
     {
         Flight f = flightqueue.Dequeue();
         if (f is LWTTFlight)
         {
             src = "LWTT";
-            for (int j = 0; j < opengates.Count(); j++)
+            for (int j = 0; j < flightlessgates; j++)
             if (term5.BoardingGates[opengates[j]].SupportLWTT == true)
             {
                 term5.BoardingGates[opengates[j]].Flight = f; 
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 total++;
                 break;
             }
@@ -954,45 +959,50 @@ string BulkAssign(Terminal t)
         else if (f is DDJBFlight)
         {
             src = "DDJB";
-            for (int j = 0; j < opengates.Count(); j++)
+            for (int j = 0; j < flightlessgates; j++)
             if (term5.BoardingGates[opengates[j]].SupportDDJB == true)
             {
                 term5.BoardingGates[opengates[j]].Flight = f; 
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 total++;
                 break;
             }
         }
         else if (f is CFFTFlight)
         {
-            src = "LWTT";
-            for (int j = 0; j < opengates.Count(); j++)
+            src = "CFFT";
+            for (int j = 0; j < flightlessgates; j++)
             if (term5.BoardingGates[opengates[j]].SupportCFFT == true)
             {
                 term5.BoardingGates[opengates[j]].Flight = f; 
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 total++;
                 break;
             }
         }
         else
         {
-            for (int j = 0; j < opengates.Count(); j++)
+            for (int j = 0; j < flightlessgates; j++)
             if ((term5.BoardingGates[opengates[j]].SupportLWTT == false) && (term5.BoardingGates[opengates[j]].SupportDDJB == false) && (term5.BoardingGates[opengates[j]].SupportCFFT == false))
             {
                 term5.BoardingGates[opengates[j]].Flight = f; 
+				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber.Substring(0,2)].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 opengates.Remove(opengates[j]);
-				ret = $"Flight Number: {f.FlightNumber}\nAirline Name: {term5.Airlines[f.FlightNumber].Name}\nOrigin: {f.Origin}\nDestination: {f.Destination}\nExpected Departure/Arrival: {f.ExpectedTime}\nBoarding Gate: {opengates[j]}\n\n";
                 total++;
                 break;
             }
         }
     }
+    gatelessflights = flightqueue.Count();
+    flightlessgates = opengates.Count();
     Console.WriteLine($"Total number of Flights and Boarding Gates processed and assigned: {total}");
-    double percentage = (total/alreadyassiged)*100;
-    System.Console.WriteLine($"Total number of Flights and Boarding Gates that were processed automatically over those that were already assigned as a percentage: {percentage:F2}");
+    if (alreadyassiged > 0)
+    {
+        percentage = (total/alreadyassiged)*100;
+    }
+    System.Console.WriteLine($"Total number of Flights and Boarding Gates that were processed automatically over those that were already assigned as a percentage: {percentage:F2}%");
     return ret;
 }
 // Advanced Feature (b)
@@ -1091,7 +1101,7 @@ Please select your option: ");
         }
 
         // Validate menu option
-        if (userinput < 0 || userinput > 7)
+        if (userinput < 0 || userinput > 8)
         {
             Console.WriteLine("Error: Invalid option. Please enter a number between 0 and 7.");
             continue; // Prompt again
@@ -1129,6 +1139,10 @@ Please select your option: ");
         else if (userinput == 7)
         {
             DisplayFlightSchedule();
+        }
+        else if (userinput == 8)
+        {
+            BulkAssign(term5);
         }
     }
     catch (Exception ex)
