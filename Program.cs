@@ -17,7 +17,7 @@ int initAirlines()
 {
     int total = 0;
     string[] a = File.ReadAllLines("airlines.csv");
-    foreach (string s in a)
+    foreach (string s in a.Skip(1))
     {
         string[] t = s.Split(',');
         Airline airinit = new Airline(t[0], t[1]);
